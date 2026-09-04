@@ -9,6 +9,24 @@ O nome *Libris* vem de *ex libris*, a marca que a biblioteca carimba no livro pa
 
 ---
 
+## No ar
+
+- Funcionários: https://libris-chi.vercel.app
+- Direção: https://libris-chi.vercel.app/direcao
+- Demonstração: `balcao@biblioteca.dev` ou `admin@biblioteca.dev`, senha `admin12345`
+
+Banco Postgres na Neon, provisionado pelo Marketplace da Vercel. Os dados são o seed de demonstração e podem ser recriados a qualquer momento.
+
+### Como subir
+
+```bash
+npm run deploy
+```
+
+O script exporta o **commit atual** com `git archive` para uma pasta limpa e sobe de lá. Não é frescura: subindo direto da pasta de trabalho, o build nunca começava — o deployment ficava em `BLOCKED`, sem uma linha de log, indefinidamente. Da árvore exportada, o mesmo commit constrói em segundos. O efeito colateral é bom: sobe exatamente o que está commitado, e alteração não commitada não vaza para produção.
+
+---
+
 ## Rodar as duas metades
 
 ```bash
