@@ -25,6 +25,19 @@ export interface Paginated<T> {
   meta: PaginationMeta;
 }
 
+export interface Author {
+  id: string;
+  name: string;
+  bio?: string | null;
+  _count?: { books: number };
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  _count?: { books: number };
+}
+
 export interface Book {
   id: string;
   isbn: string;

@@ -70,7 +70,7 @@ export function Balcao({ operador }: { operador: User }) {
     <div style={{ display: 'grid', gap: 'calc(var(--u) * 6)' }}>
       <header>
         <h1>Atendimento</h1>
-        <p className="sub" style={{ margin: 'calc(var(--u) * 1.5) 0 0', fontSize: 15 }}>
+        <p className="sub" style={{ margin: 'calc(var(--u) * 1.5) 0 0', fontSize: 15, color: 'var(--tinta-campo)' }}>
           Leia o tombo do exemplar que está na sua mão.
         </p>
       </header>

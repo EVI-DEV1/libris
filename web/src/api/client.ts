@@ -1,6 +1,8 @@
 import type {
   ApiErrorBody,
+  Author,
   Book,
+  Category,
   Copy,
   Loan,
   Paginated,
@@ -137,4 +139,35 @@ export const api = {
 
   users: (params: { search?: string; role?: string; page?: number; perPage?: number }) =>
     request<Paginated<User>>(`/users${qs(params)}`),
+
+  /* ---- Gestao do acervo. Tudo aqui exige papel de balcao ou direcao, e e o
+     servidor que recusa quem nao tem — a tela so esconde o que nao adianta. */
+
+  authors: (params: { search?: string; perPage?: number }) =>
+    request<Paginated<Author>>(`/authors${qs(params)}`),
+
+  createAuthor: (name: string, bio?: string) =>
+    request<Author>("/authors", { method: "POST", body: JSON.stringify({ name, bio }) }),
+
+  categories: (params: { search?: string; perPage?: number }) =>
+    request<Paginated<Category>>(`/categories${qs(params)}`),
+
+  createCategory: (name: string) =>
+    request<Category>("/categories", { method: "POST", body: JSON.stringify({ name }) }),
+
+  createBook: (dados: {
+    isbn: string;
+    title: string;
+    authorIds: string[];
+    categoryId?: string;
+    publisher?: string;
+    publishedYear?: number;
+    synopsis?: string;
+  }) => request<Book>("/books", { method: "POST", body: JSON.stringify(dados) }),
+
+  createCopy: (dados: { bookId: string; code: string; shelf?: string }) =>
+    request<Copy>("/copies", { method: "POST", body: JSON.stringify(dados) }),
+
+  updateCopy: (id: string, dados: { shelf?: string; status?: "AVAILABLE" | "MAINTENANCE" | "LOST" }) =>
+    request<Copy>(`/copies/${id}`, { method: "PATCH", body: JSON.stringify(dados) }),
 };

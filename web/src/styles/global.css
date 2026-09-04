@@ -73,13 +73,16 @@
   --papel: #ffffff;
   --campo: #f4f7fb; /* neutro para hover, faixas e esqueleto */
 
-  /* O CAMPO DA PAGINA e o proprio gradiente, diluido em 74% de branco.
-     Diluido por medida, nao por gosto: a 60% o texto secundario cai para
-     4.01:1. Aqui a tinta da 12.2:1 no pior ponto e a secundaria 5.04:1, e o
-     gradiente continua obviamente o Transfile — nao virou cinza. */
-  --campo-a: #c2eefe;
-  --campo-b: #f1c9d7;
-  --fundo: linear-gradient(145deg, var(--campo-a) 0%, #e2e6f6 46%, var(--campo-b) 100%);
+  /* O CAMPO DA PAGINA e o proprio gradiente. Diluido em 52% de branco — e o
+     numero e o limite medido, nao gosto: nesta saturacao o texto que fica
+     DIRETO no campo precisa da tinta propria abaixo (--tinta-campo), porque a
+     secundaria comum cairia para 3.7:1 sobre a ponta rosa. */
+  --campo-a: #8fe0fe;
+  --campo-b: #e69cb6;
+  --fundo: linear-gradient(145deg, var(--campo-a) 0%, #bbbeda 48%, var(--campo-b) 100%);
+
+  /* Tinta para o que se apoia direto no campo colorido: 5.41:1 no pior ponto. */
+  --tinta-campo: #2f394c;
   --campo-2: #e6ebf4; /* faixas, estados de repouso */
   --linha: #dbe2ee; /* divisórias */
 

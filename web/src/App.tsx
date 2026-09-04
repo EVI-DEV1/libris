@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api, ApiError, token } from './api/client';
-import type { User } from './api/types';
+import type { Role, User } from './api/types';
 import { brand } from './brand';
 import { Icon } from './ui/Icon';
 import type { IconName } from './ui/Icon';
@@ -10,14 +10,17 @@ import { Balcao } from './screens/Balcao';
 import { Acervo } from './screens/Acervo';
 import { Emprestimos } from './screens/Emprestimos';
 import { Reservas } from './screens/Reservas';
+import { Gestao } from './screens/Gestao';
 
-type Tarefa = 'balcao' | 'acervo' | 'emprestimos' | 'reservas';
+type Tarefa = 'balcao' | 'acervo' | 'emprestimos' | 'reservas' | 'gestao';
 
-const TAREFAS: { id: Tarefa; nome: string; icone: IconName }[] = [
+/** `gestao` fica atrás de papel: o leitor nem vê, e o servidor recusaria. */
+const TAREFAS: { id: Tarefa; nome: string; icone: IconName; papeis?: Role[] }[] = [
   { id: 'balcao', nome: 'Atendimento', icone: 'bipar' },
   { id: 'acervo', nome: 'Acervo', icone: 'acervo' },
   { id: 'emprestimos', nome: 'Empréstimos', icone: 'pilha' },
   { id: 'reservas', nome: 'Reservas', icone: 'reserva' },
+  { id: 'gestao', nome: 'Gestão', icone: 'estante', papeis: ['ADMIN', 'LIBRARIAN'] },
 ];
 
 export function App() {
@@ -75,6 +78,7 @@ export function App() {
           {tarefa === 'acervo' && <Acervo />}
           {tarefa === 'emprestimos' && <Emprestimos />}
           {tarefa === 'reservas' && <Reservas />}
+          {tarefa === 'gestao' && <Gestao />}
         </div>
       </main>
 
@@ -129,7 +133,7 @@ function Trilho({
       </div>
 
       <div className="trilho-itens">
-        {TAREFAS.map((t) => {
+        {TAREFAS.filter((t) => !t.papeis || t.papeis.includes(user.role)).map((t) => {
           const ativo = t.id === tarefa;
           return (
             <button

@@ -69,7 +69,7 @@ export function Reservas() {
       >
         <div>
           <h1>Reservas</h1>
-          <p className="sub" style={{ margin: 'calc(var(--u) * 1.5) 0 0', fontSize: 15 }}>
+          <p className="sub" style={{ margin: 'calc(var(--u) * 1.5) 0 0', fontSize: 15, color: 'var(--tinta-campo)' }}>
             A fila é por ordem de chegada, e quem espera tem prioridade sobre quem renova.
           </p>
         </div>
