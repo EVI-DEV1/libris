@@ -11,7 +11,12 @@ import type {
 } from './types';
 
 const BASE = '/api/v1';
-const TOKEN_KEY = 'lombada.token';
+/**
+ * Chave de sessao de proposito NEUTRA. Ja sobreviveu a duas trocas de nome do
+ * produto carregando o nome antigo dentro dela; amarrar armazenamento a marca
+ * so gera residuo na proxima renomeacao.
+ */
+const TOKEN_KEY = "sessao.token";
 
 /**
  * Erro que carrega a mensagem que o servidor deu. A regra de negócio é do

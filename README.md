@@ -1,11 +1,11 @@
-# Circula
+# Libris
 
 Sistema de biblioteca em duas metades: uma **API REST** que carrega as regras de negócio, e um **front-end** que as opera.
 
 - **API** — Node + TypeScript + Express + Prisma + JWT + Zod, com testes de integração, documentação OpenAPI e Docker.
 - **Front-end** (`web/`) — React + Vite + TypeScript. Atendimento, acervo, empréstimos, reservas, gestão do estoque e equipe.
 
-O nome *Circula* vem de circulação — o que a biblioteca chama de movimento de empréstimo e devolução. É provisório e mora em um arquivo só, [web/src/brand.ts](web/src/brand.ts): trocar leva um minuto e não encosta em mais nada.
+O nome *Libris* vem de *ex libris*, a marca que a biblioteca carimba no livro para dizer de quem ele é. Mora em um arquivo só, [web/src/brand.ts](web/src/brand.ts): trocar leva um minuto e não encosta em mais nada — nem a chave de sessão no navegador, que é neutra de propósito para não virar resíduo do nome antigo.
 
 ---
 
