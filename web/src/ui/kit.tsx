@@ -93,9 +93,10 @@ export function Btn({
   };
 
   const pele: Record<string, CSSProperties> = {
-    // A ação primária é a única superfície de cobalto cheio da tela.
+    // A ação primária é a única superfície de gradiente cheio da tela.
     acao: {
-      background: 'var(--acao)',
+      // Gradiente forte, nao o cru: branco sobre a ponta ciano crua da 2.12:1.
+      backgroundImage: 'var(--gradiente-forte)',
       color: '#fff',
       boxShadow: off ? 'none' : 'var(--sombra-acao)',
     },
@@ -213,7 +214,7 @@ export function Campo({
             borderRadius: 'var(--r)',
             padding: `${grande ? 'calc(var(--u) * 3.5)' : 'calc(var(--u) * 2.75)'} calc(var(--u) * 3.5)`,
             paddingLeft: icone ? 'calc(var(--u) * 11)' : undefined,
-            boxShadow: focado ? '0 0 0 4px rgba(47, 87, 255, 0.12)' : 'var(--sombra-1)',
+            boxShadow: focado ? '0 0 0 4px rgba(22, 191, 253, 0.2)' : 'var(--sombra-1)',
             outline: 'none',
           }}
         />

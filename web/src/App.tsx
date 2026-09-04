@@ -184,7 +184,7 @@ function Trilho({
         .marca-selo {
           width: 38px; height: 38px; flex: none;
           border-radius: 11px;
-          background: var(--acao);
+          background-image: var(--gradiente-forte);
           color: #fff;
           display: grid; place-items: center;
           box-shadow: var(--sombra-acao);
@@ -200,13 +200,13 @@ function Trilho({
           cursor: pointer; text-align: left;
         }
         .item:hover { background: var(--campo); color: var(--tinta); }
-        /* O ativo ocupa um campo inteiro de cobalto claro, com a barra da cor
-           cheia na borda: estado por região, não por marquinha. */
+        /* O ativo ocupa um campo inteiro do ciano do gradiente, com a barra da
+           cor cheia na borda: estado por região, não por marquinha. */
         .item-ativo,
         .item-ativo:hover {
           background: var(--acao-fraca);
           color: var(--acao-tinta);
-          box-shadow: inset 3px 0 0 var(--acao);
+          box-shadow: inset 3px 0 0 var(--g-a-forte);
         }
         .trilho-pe {
           display: flex; align-items: center; gap: calc(var(--u) * 2);
@@ -245,7 +245,7 @@ function Trilho({
           }
           .trilho-itens::-webkit-scrollbar { display: none; }
           .item { white-space: nowrap; }
-          .item-ativo, .item-ativo:hover { box-shadow: inset 0 -3px 0 var(--acao); }
+          .item-ativo, .item-ativo:hover { box-shadow: inset 0 -3px 0 var(--g-a-forte); }
           .trilho-pe { border-top: 0; padding: 0; flex: none; }
           .quem .sub { display: none; }
         }

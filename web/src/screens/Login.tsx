@@ -78,7 +78,8 @@ export function Login({ onEntrar }: { onEntrar: (u: User) => void }) {
           /* Um campo de cor que respira, para a entrada não ser um formulário
              solto no branco. */
           background:
-            radial-gradient(1100px 620px at 50% -10%, #dfe6ff 0%, transparent 62%),
+            radial-gradient(900px 520px at 12% -8%, rgba(22, 191, 253, 0.28) 0%, transparent 60%),
+            radial-gradient(900px 520px at 88% 8%, rgba(203, 48, 102, 0.22) 0%, transparent 58%),
             var(--campo);
         }
         .entrada-caixa {
@@ -94,7 +95,7 @@ export function Login({ onEntrar }: { onEntrar: (u: User) => void }) {
         .entrada-selo {
           width: 52px; height: 52px;
           border-radius: 15px;
-          background: var(--acao);
+          background-image: var(--gradiente-forte);
           color: #fff;
           display: grid; place-items: center;
           box-shadow: var(--sombra-acao);

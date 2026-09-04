@@ -9,8 +9,9 @@
    Aqui a vida vem de três lugares, nenhum deles decorativo:
    1. PROFUNDIDADE — superfícies em camadas, com sombra que tem deslocamento
       E desfoque. Nada de bloco duro.
-   2. UMA COR QUE MANDA — o cobalto ocupa regiões inteiras (a ação primária, a
-      barra, o estado ativo), não fica polvilhado em detalhezinho.
+   2. UMA COR QUE MANDA — o gradiente Transfile (uiGradients) ocupa regiões
+      inteiras: o selo da marca, a ação primária, a barra do item ativo, o
+      fundo da entrada. Nunca polvilhado em detalhezinho.
    3. MOVIMENTO QUE RESPONDE — curva de saída exponencial, a partir de um
       estado já visível. A tela reage ao toque, não faz número.
 
@@ -68,18 +69,40 @@
      jornada inteira; cartões em branco puro, que assim ganham relevo sozinhos. */
   --tinta: #0d1526; /* texto principal — 16.1:1 sobre --papel */
   --tinta-2: #4a5568; /* texto secundário — 7.4:1 sobre --papel */
-  --tinta-3: #6b7689; /* texto terciário — 4.8:1 sobre --papel, ainda passa */
+  --tinta-3: #616c84; /* terciário — 5.27:1 no branco e 4.90:1 no campo */
   --papel: #ffffff;
-  --campo: #f2f5fa; /* fundo da página */
+  --campo: #f4f7fb; /* fundo da página */
   --campo-2: #e6ebf4; /* faixas, estados de repouso */
   --linha: #dbe2ee; /* divisórias */
 
-  /* A cor que manda. Cobalto: mais elétrico que o índigo de praxe, e não é o
-     azul-corporativo morno. Ocupa região inteira, nunca detalhe. */
-  --acao: #2f57ff;
-  --acao-escura: #1f3fd8;
-  --acao-fraca: #eef1ff; /* campo claro da mesma família */
-  --acao-tinta: #1b2f9e; /* texto sobre --acao-fraca — 8.2:1 */
+  /* ---------------------------------------------------------------------
+     A COR QUE MANDA — gradiente Transfile, do uiGradients, escolhido pelo
+     usuario como referencia. As duas pontas cruas ficam registradas aqui:
+       ciano  #16bffd
+       vinho  #cb3066
+     Trocar de gradiente e trocar estas duas linhas.
+
+     Por que existe uma versao FORTE: branco sobre a ponta ciano crua da
+     2.12:1 e seria ilegivel num botao. Mas escurecer as DUAS pontas por igual
+     mata o brilho que fez a paleta ser escolhida — e a ponta vinho crua ja da
+     5.06:1. Entao so a ciano desce, e ate o ponto exato em que passa (4.60:1),
+     nem um grau alem. O cru fica para superficie sem texto.
+     --------------------------------------------------------------------- */
+  --g-a: #16bffd;
+  --g-b: #cb3066;
+  --g-a-forte: #0f7ea7; /* ciano no ponto exato em que o branco passa: 4.60:1 */
+  --g-b-forte: #cb3066; /* vinho fica CRU: com branco ja da 5.06:1 */
+
+  --gradiente: linear-gradient(115deg, var(--g-a), var(--g-b));
+  --gradiente-forte: linear-gradient(115deg, var(--g-a-forte), var(--g-b-forte));
+
+  /* Solidos derivados, para o que gradiente nao resolve: texto, foco, borda. */
+  --acao: #0e769d; /* solido para texto e foco — 5.13:1 sobre branco */
+  --acao-escura: #0b607f;
+  --acao-fraca: #e8f9ff; /* campo claro tirado da ponta ciano */
+  --acao-tinta: #0e769d; /* 4.74:1 sobre --acao-fraca */
+  --vinho-fraca: #faeaf0;
+  --vinho-tinta: #7e1e3f; /* 8.44:1 sobre --vinho-fraca */
 
   /* Sinais. Só três, e cada um significa uma coisa só. */
   --alerta: #b45309; /* atenção: vence hoje, prazo curto — 4.6:1 sobre papel */
@@ -101,7 +124,7 @@
   --sombra-1: 0 1px 2px rgba(13, 21, 38, 0.06), 0 1px 3px rgba(13, 21, 38, 0.04);
   --sombra-2: 0 2px 4px rgba(13, 21, 38, 0.05), 0 8px 20px -6px rgba(13, 21, 38, 0.12);
   --sombra-3: 0 4px 8px rgba(13, 21, 38, 0.06), 0 20px 40px -12px rgba(13, 21, 38, 0.2);
-  --sombra-acao: 0 2px 4px rgba(47, 87, 255, 0.2), 0 10px 24px -8px rgba(47, 87, 255, 0.45);
+  --sombra-acao: 0 2px 4px rgba(15, 126, 167, 0.22), 0 12px 28px -8px rgba(203, 48, 102, 0.45);
 
   /* Saída exponencial: rápida no começo, assenta devagar. É o que faz a tela
      parecer viva em vez de animada. */
@@ -252,10 +275,10 @@ h2 {
 /* O pulso que marca o que ACABOU de mudar de estado no servidor. */
 @keyframes pulso {
   0% {
-    box-shadow: 0 0 0 0 rgba(47, 87, 255, 0.45);
+    box-shadow: 0 0 0 0 rgba(22, 191, 253, 0.55);
   }
   100% {
-    box-shadow: 0 0 0 14px rgba(47, 87, 255, 0);
+    box-shadow: 0 0 0 14px rgba(22, 191, 253, 0);
   }
 }
 

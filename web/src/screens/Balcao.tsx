@@ -414,7 +414,7 @@ function Emprestar({
         }
         .avatar-lg {
           width: 38px; height: 38px; flex: none; border-radius: 50%;
-          background: var(--acao); color: #fff; display: grid; place-items: center;
+          background-image: var(--gradiente-forte); color: #fff; display: grid; place-items: center;
         }
       `}</style>
     </div>
@@ -429,7 +429,7 @@ function Passo({ n, texto }: { n: number; texto: string }) {
           width: 22,
           height: 22,
           borderRadius: '50%',
-          background: 'var(--acao)',
+          backgroundImage: 'var(--gradiente-forte)',
           color: '#fff',
           fontSize: 12,
           fontWeight: 800,
