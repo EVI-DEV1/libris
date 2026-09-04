@@ -8,8 +8,12 @@ const withBook = { book: { select: { id: true, title: true, isbn: true } } };
 
 export const copiesService = {
   async list(query: z.infer<typeof listCopiesSchema>) {
-    const { bookId, status, ...pagination } = query;
-    const where = { ...(bookId && { bookId }), ...(status && { status }) };
+    const { bookId, status, code, ...pagination } = query;
+    const where = {
+      ...(bookId && { bookId }),
+      ...(status && { status }),
+      ...(code && { code: { contains: code } }),
+    };
 
     const [data, total] = await Promise.all([
       prisma.copy.findMany({

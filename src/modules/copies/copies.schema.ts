@@ -20,4 +20,10 @@ export const updateCopySchema = z
 export const listCopiesSchema = paginationSchema.extend({
   bookId: z.string().uuid().optional(),
   status: z.enum(['AVAILABLE', 'ON_LOAN', 'RESERVED', 'MAINTENANCE', 'LOST']).optional(),
+  /**
+   * Busca pelo codigo de tombo. E o gesto do balcao: o funcionario tem o livro
+   * na mao e le a etiqueta. Normalizado para maiuscula porque e assim que o
+   * codigo e gravado.
+   */
+  code: z.string().trim().min(1).max(40).toUpperCase().optional(),
 });

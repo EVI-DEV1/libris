@@ -299,7 +299,13 @@ export const openapiDocument = {
         security: bearerAuth,
         parameters: [
           ...paginationParams,
-          { name: 'bookId', in: 'query', schema: { type: 'string', format: 'uuid' } },
+                    {
+            name: 'code',
+            in: 'query',
+            description: 'Codigo de tombo, o gesto do balcao: o livro esta na mao',
+            schema: { type: 'string', example: 'BIB-000123' },
+          },
+{ name: 'bookId', in: 'query', schema: { type: 'string', format: 'uuid' } },
           {
             name: 'status',
             in: 'query',
