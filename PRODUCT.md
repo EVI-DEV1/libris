@@ -12,9 +12,13 @@ React + Vite + TypeScript (escolha do usuário, nesta sessão). Consome a API RE
 
 ## Users
 
-Primário e único confirmado: **o funcionário do balcão da biblioteca** (papel `LIBRARIAN`, e o `ADMIN` que faz o mesmo com mais permissão). Trabalha em pé ou sentado num balcão, com fila de pessoas na frente, atendendo um leitor por vez e alternando entre quatro tarefas curtas: achar um livro, emprestar, receber de volta, e responder "quando chega minha reserva?".
+Dois usuários confirmados, com portas de entrada separadas:
 
-O leitor (`MEMBER`) existe na API e tem escopo próprio, mas **não recebe tela nesta versão** — decisão do usuário. Área do leitor fica como expansão futura.
+**O funcionário do balcão** (`LIBRARIAN`), pela porta `/`. Trabalha com fila de pessoas na frente, atendendo um leitor por vez e alternando entre tarefas curtas: achar um livro, emprestar, receber de volta, responder "quando chega minha reserva?", e manter o acervo e o estoque em dia.
+
+**A direção** (`ADMIN`), pela porta `/direcao`. Faz tudo o que o funcionário faz, e mais: cria as contas da equipe, define o papel de cada um e devolve o acesso de quem perdeu a senha. Entrando pela porta dela, cai na gestão, não no balcão.
+
+O leitor (`MEMBER`) existe na API e tem escopo próprio, mas **não recebe tela nesta versão** — decisão do usuário. Área do leitor fica como expansão futura; as duas portas recusam contas de leitor explicitamente.
 
 ## Product Purpose
 
@@ -45,11 +49,23 @@ Confirmado pela API já construída:
 - Erros vêm padronizados com `error.code` e `error.message` **já em português** — a tela deve exibir a mensagem do servidor, não reescrever a regra.
 - Parâmetros de negócio (prazo, limite, multa/dia, renovações) são configuráveis por ambiente. A tela nunca pode chumbar esses números.
 
-Não decidido: hospedagem, multi-biblioteca (uma instância por cliente ou várias), leitor de código de barras físico.
+Acesso e contas:
+
+- **Só a direção cria login.** Não existe autocadastro de equipe. `POST /users` exige `ADMIN`.
+- **A senha não é escolhida por quem cria**: sai sempre a `SENHA_PADRAO` do ambiente.
+- **Senha padrão nunca é a senha de ninguém**: a conta nasce com `mustChangePassword` e o sistema segura a pessoa numa tela de troca antes de qualquer outra coisa. Confirmado pelo usuário como comportamento desejado.
+- **"Esqueci a senha" passa pela direção**, não por e-mail: ela reseta a conta para a padrão e a trava religa. Redefinição por e-mail exige provedor de envio, que não existe aqui — e a tela diz isso ao usuário.
+- Troca de senha exige a senha atual mesmo quando a conta está na padrão.
+
+Gestão do acervo (`ADMIN` e `LIBRARIAN`): cadastrar obra com criação de autor e categoria embutida, tombar exemplar, e mover exemplar entre na estante / manutenção / perdido. Exemplar emprestado ou reservado não aceita troca de situação — esse estado pertence ao empréstimo.
+
+Não decidido: hospedagem, multi-biblioteca (uma instância por cliente ou várias), leitor de código de barras físico, redefinição de senha por e-mail.
 
 ## Brand Commitments
 
-Nome do produto: **Lombada**. Criado nesta sessão a pedido do usuário, deliberadamente trocável — deve ficar isolado em um único ponto do código para renomear em minutos.
+Nome do produto: **Libris**, de *ex libris* — a marca que a biblioteca carimba no livro para dizer de quem ele é. Escolhido pelo usuário depois de dois nomes descartados (Lombada, Circula), o que torna a exigência dura: o nome vive em um ponto só do código (`web/src/brand.ts`) e nada mais o escreve — nem a chave de sessão no navegador, que é neutra de propósito.
+
+Referência visual dada pelo usuário: o gradiente **Transfile** do uiGradients (#16bffd → #cb3066). O usuário recusou explicitamente uma direção retrô anterior com as palavras "velho" e "sem vida", e pediu design atual.
 
 Interface em português do Brasil. O vocabulário do domínio é o da biblioteca, não o do banco de dados: exemplar, tombo, acervo, empréstimo, devolução, reserva, multa.
 
