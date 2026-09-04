@@ -1,0 +1,162 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// Papel do usuario dentro da biblioteca.
+enum Role {
+  ADMIN
+  LIBRARIAN
+  MEMBER
+}
+
+enum CopyStatus {
+  AVAILABLE
+  ON_LOAN
+  RESERVED
+  MAINTENANCE
+  LOST
+}
+
+enum LoanStatus {
+  ACTIVE
+  RETURNED
+  LATE
+}
+
+enum ReservationStatus {
+  WAITING
+  READY
+  FULFILLED
+  CANCELLED
+  EXPIRED
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(MEMBER)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  loans        Loan[]
+  reservations Reservation[]
+
+  @@map("users")
+}
+
+model Author {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  bio       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  books BookAuthor[]
+
+  @@map("authors")
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  books Book[]
+
+  @@map("categories")
+}
+
+model Book {
+  id            String   @id @default(uuid())
+  isbn          String   @unique
+  title         String
+  synopsis      String?
+  publisher     String?
+  publishedYear Int?
+  categoryId    String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  category     Category?     @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  authors      BookAuthor[]
+  copies       Copy[]
+  reservations Reservation[]
+
+  @@index([title])
+  @@map("books")
+}
+
+/// Tabela de juncao livro <-> autor (um livro pode ter varios autores).
+model BookAuthor {
+  bookId   String
+  authorId String
+
+  book   Book   @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  author Author @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@id([bookId, authorId])
+  @@map("book_authors")
+}
+
+/// Exemplar fisico. O emprestimo acontece sobre o exemplar, nunca sobre o livro.
+model Copy {
+  id        String     @id @default(uuid())
+  code      String     @unique
+  bookId    String
+  status    CopyStatus @default(AVAILABLE)
+  shelf     String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  book  Book   @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  loans Loan[]
+
+  @@index([bookId, status])
+  @@map("copies")
+}
+
+model Loan {
+  id         String     @id @default(uuid())
+  userId     String
+  copyId     String
+  loanedAt   DateTime   @default(now())
+  dueAt      DateTime
+  returnedAt DateTime?
+  renewals   Int        @default(0)
+  fine       Float      @default(0)
+  status     LoanStatus @default(ACTIVE)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  copy Copy @relation(fields: [copyId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@index([copyId, status])
+  @@map("loans")
+}
+
+model Reservation {
+  id         String            @id @default(uuid())
+  userId     String
+  bookId     String
+  status     ReservationStatus @default(WAITING)
+  expiresAt  DateTime?
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@index([bookId, status])
+  @@map("reservations")
+}

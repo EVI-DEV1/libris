@@ -1,0 +1,32 @@
+services:
+  api:
+    build: .
+    ports:
+      - '3333:3333'
+    environment:
+      NODE_ENV: production
+      PORT: 3333
+      DATABASE_URL: postgresql://biblioteca:biblioteca@db:5432/biblioteca
+      JWT_SECRET: ${JWT_SECRET:-troque-este-segredo-em-producao}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: biblioteca
+      POSTGRES_PASSWORD: biblioteca
+      POSTGRES_DB: biblioteca
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      # Sem healthcheck a API sobe antes do banco aceitar conexao e morre no boot.
+      test: ['CMD-SHELL', 'pg_isready -U biblioteca']
+      interval: 5s
+      retries: 10
+
+volumes:
+  pgdata:
