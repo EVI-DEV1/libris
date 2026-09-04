@@ -1,8 +1,47 @@
-# API da Biblioteca
+# Lombada
 
-API REST de gestão de biblioteca: catálogo, exemplares físicos, empréstimos, devoluções com multa, renovações e fila de reservas.
+Sistema de biblioteca em duas metades: uma **API REST** que carrega as regras de negócio, e um **front-end de balcão** que as opera.
 
-Node + TypeScript + Express + Prisma + JWT + Zod, com testes de integração, documentação OpenAPI e Docker.
+- **API** — Node + TypeScript + Express + Prisma + JWT + Zod, com testes de integração, documentação OpenAPI e Docker.
+- **Balcão** (`web/`) — React + Vite + TypeScript. Catálogo, empréstimo, devolução com multa e fila de reservas.
+
+O nome *Lombada* é provisório e mora em um arquivo só, [web/src/brand.ts](web/src/brand.ts) — trocar leva um minuto e não encosta em mais nada.
+
+---
+
+## Rodar as duas metades
+
+```bash
+npm install && cp .env.example .env && npx prisma db push && npm run seed && npm run dev
+```
+
+Em outro terminal:
+
+```bash
+npm install --prefix web && npm run dev --prefix web
+```
+
+- Balcão: `http://localhost:5173`
+- API: `http://localhost:3333/api/v1`
+- Documentação: `http://localhost:3333/api/docs`
+
+O Vite faz proxy de `/api` para a porta 3333, então não há CORS no caminho durante o desenvolvimento.
+
+---
+
+## O balcão
+
+A tela parte do gesto real: **o funcionário tem o livro na mão**. Por isso a primeira coisa é um campo único de comando que recebe o código de tombo — digitado, ou bipado por leitor de código de barras, que envia `Enter`. O exemplar aparece e a tela oferece **só a ação que aquele exemplar aceita agora**: emprestar se está na estante, devolver ou renovar se está fora, e um aviso se está separado para quem está na frente da fila.
+
+Três decisões de interface que valem explicar:
+
+**A regra é do servidor; a explicação é da tela.** Quando o empréstimo é recusado — atraso em aberto, limite atingido, exemplar reservado para outra pessoa — a interface mostra a frase que o servidor devolveu, sem reescrever a regra. Existe um lugar só onde essas condições vivem, e é o `loans.service.ts`.
+
+**A recusa ganha o mesmo desenho do sucesso.** Bloquear empréstimo e cobrar multa são rotina de balcão, não erro de sistema. O componente `Recado` trata os dois com a mesma caixa.
+
+**Nenhum número é chumbado.** Prazo, limite de simultâneos, multa por dia e renovações vêm do servidor. A tela mostra o que recebeu.
+
+O mundo visual está registrado em [DESIGN.md](DESIGN.md), e o contrato da direção vive como comentário HTML no topo de [web/index.html](web/index.html).
 
 ---
 
