@@ -12,6 +12,10 @@ export const authController = {
     res.json(result);
   },
 
+  async changePassword(req: Request, res: Response) {
+    res.json(await authService.changePassword(req.user!.sub, req.body));
+  },
+
   async me(req: Request, res: Response) {
     res.json(await authService.me(req.user!.sub));
   },

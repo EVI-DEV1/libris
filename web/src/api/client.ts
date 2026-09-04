@@ -90,7 +90,23 @@ export const api = {
       body: JSON.stringify({ email, password }),
     }),
 
-  me: () => request<User>('/auth/me'),
+  me: () => request<User>("/auth/me"),
+
+  trocarSenha: (senhaAtual: string, senhaNova: string) =>
+    request<User>("/auth/change-password", {
+      method: "POST",
+      body: JSON.stringify({ senhaAtual, senhaNova }),
+    }),
+
+  /** Direcao cria conta de equipe. A senha nao vai no corpo: e a padrao. */
+  criarFuncionario: (dados: { name: string; email: string; role: "ADMIN" | "LIBRARIAN" }) =>
+    request<User>("/users", { method: "POST", body: JSON.stringify(dados) }),
+
+  /** O "esqueci a senha" desta versao: a direcao devolve a conta para a padrao. */
+  resetarSenha: (id: string) =>
+    request<void>(`/users/${id}/reset-password`, { method: "POST" }),
+
+  desativarUsuario: (id: string) => request<void>(`/users/${id}`, { method: "DELETE" }),
 
   books: (params: { search?: string; available?: boolean; page?: number; perPage?: number }) =>
     request<Paginated<Book>>(`/books${qs(params)}`),

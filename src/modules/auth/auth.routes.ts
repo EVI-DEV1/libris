@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import { authController } from './auth.controller';
-import { loginSchema, registerSchema } from './auth.schema';
+import { changePasswordSchema, loginSchema, registerSchema } from './auth.schema';
 import { validate } from '../../middlewares/validate';
 import { authenticate } from '../../middlewares/auth';
 import { asyncHandler } from '../../shared/asyncHandler';
@@ -31,4 +31,11 @@ authRoutes.post(
   validate({ body: loginSchema }),
   asyncHandler(authController.login),
 );
-authRoutes.get('/me', authenticate, asyncHandler(authController.me));
+authRoutes.get("/me", authenticate, asyncHandler(authController.me));
+
+authRoutes.post(
+  "/change-password",
+  authenticate,
+  validate({ body: changePasswordSchema }),
+  asyncHandler(authController.changePassword),
+);

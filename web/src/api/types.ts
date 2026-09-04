@@ -10,6 +10,8 @@ export interface User {
   email: string;
   role: Role;
   active?: boolean;
+  /** Conta ainda na senha padrao: o sistema segura na troca antes de tudo. */
+  mustChangePassword?: boolean;
 }
 
 export interface PaginationMeta {

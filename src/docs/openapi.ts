@@ -131,7 +131,35 @@ export const openapiDocument = {
       },
     },
 
-    '/users': {
+    "/users": {
+      post: {
+        tags: ["Users"],
+        summary: "Cria conta de equipe com a senha padrao (ADMIN)",
+        description:
+          "A senha NAO vem no corpo: e sempre a SENHA_PADRAO do ambiente, e a conta nasce com troca obrigatoria no primeiro acesso.",
+        security: bearerAuth,
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["name", "email", "role"],
+                properties: {
+                  name: { type: "string", example: "Joana Balcao" },
+                  email: { type: "string", format: "email" },
+                  role: { type: "string", enum: ["ADMIN", "LIBRARIAN"] },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          201: { description: "Criado, com mustChangePassword true" },
+          403: erro("So a direcao cria conta"),
+          409: erro("E-mail ja cadastrado"),
+        },
+      },
       get: {
         tags: ['Users'],
         summary: 'Lista usuarios',
@@ -187,7 +215,49 @@ export const openapiDocument = {
       },
     },
 
-    '/books': {
+    "/users/{id}/reset-password": {
+      post: {
+        tags: ["Users"],
+        summary: "Devolve a conta para a senha padrao (ADMIN)",
+        description:
+          "E o caminho de esqueci-a-senha desta versao: sem servico de e-mail, quem restabelece acesso e a direcao, e a troca obrigatoria volta a valer.",
+        security: bearerAuth,
+        parameters: [uuidParam],
+        responses: { 204: { description: "Resetado" }, 403: erro("So a direcao reseta") },
+      },
+    },
+
+    "/auth/change-password": {
+      post: {
+        tags: ["Auth"],
+        summary: "Troca a propria senha",
+        description:
+          "Exige a senha atual mesmo quando a conta esta na senha padrao: com o token na mao, nao pedir a atual deixa sessao esquecida virar sequestro de conta.",
+        security: bearerAuth,
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["senhaAtual", "senhaNova"],
+                properties: {
+                  senhaAtual: { type: "string" },
+                  senhaNova: { type: "string", minLength: 8 },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          200: { description: "Trocada, com mustChangePassword false" },
+          400: erro("A nova senha e igual a atual"),
+          401: erro("Senha atual incorreta"),
+        },
+      },
+    },
+
+    "/books": {
       get: {
         tags: ['Books'],
         summary: 'Busca no catalogo (publico)',

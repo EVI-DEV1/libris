@@ -1,11 +1,11 @@
-# Lombada
+# Circula
 
-Sistema de biblioteca em duas metades: uma **API REST** que carrega as regras de negócio, e um **front-end de balcão** que as opera.
+Sistema de biblioteca em duas metades: uma **API REST** que carrega as regras de negócio, e um **front-end** que as opera.
 
 - **API** — Node + TypeScript + Express + Prisma + JWT + Zod, com testes de integração, documentação OpenAPI e Docker.
-- **Balcão** (`web/`) — React + Vite + TypeScript. Catálogo, empréstimo, devolução com multa e fila de reservas.
+- **Front-end** (`web/`) — React + Vite + TypeScript. Atendimento, acervo, empréstimos, reservas, gestão do estoque e equipe.
 
-O nome *Lombada* é provisório e mora em um arquivo só, [web/src/brand.ts](web/src/brand.ts) — trocar leva um minuto e não encosta em mais nada.
+O nome *Circula* vem de circulação — o que a biblioteca chama de movimento de empréstimo e devolução. É provisório e mora em um arquivo só, [web/src/brand.ts](web/src/brand.ts): trocar leva um minuto e não encosta em mais nada.
 
 ---
 
@@ -21,11 +21,24 @@ Em outro terminal:
 npm install --prefix web && npm run dev --prefix web
 ```
 
-- Balcão: `http://localhost:5173`
+- Funcionários: `http://localhost:5173`
+- Direção: `http://localhost:5173/direcao`
 - API: `http://localhost:3333/api/v1`
 - Documentação: `http://localhost:3333/api/docs`
 
 O Vite faz proxy de `/api` para a porta 3333, então não há CORS no caminho durante o desenvolvimento.
+
+---
+
+## Duas portas, e quem cria acesso
+
+O sistema tem **duas entradas com endereço próprio**: `/` para os funcionários e `/direcao` para a administração. Cada porta recusa quem não é dela, e diz para onde a pessoa deve ir — em vez de deixar tentando a mesma senha numa porta que nunca vai abrir.
+
+**Só a direção cria login.** Não existe autocadastro para a equipe. A direção abre a conta em *Equipe*, escolhe o papel (funcionário ou direção), e pronto — a senha **não é escolhida por quem cria**: sai sempre a `SENHA_PADRAO` do ambiente.
+
+**A senha padrão nunca é a senha de ninguém.** A conta nasce com `mustChangePassword`, e o sistema segura a pessoa numa tela de troca antes de qualquer outra coisa. Senha padrão que sobrevive ao primeiro acesso é a senha que a equipe inteira conhece — deixar isso passar seria entregar um buraco vendido como funcionalidade.
+
+**Esqueci a senha** leva à direção, não ao e-mail: ela reseta a conta de volta para a padrão em *Equipe*, e a troca obrigatória volta a valer. Redefinição por e-mail depende de um serviço de envio que este sistema não tem, e está escrito na própria tela para ninguém esperar o que não existe.
 
 ---
 
@@ -57,28 +70,6 @@ Boa parte das APIs de estudo é CRUD puro: cadastra, lista, apaga. Biblioteca te
 Tudo isso vive em transação, porque duas requisições simultâneas emprestariam o mesmo exemplar.
 
 ---
-
-## Como rodar
-
-```bash
-npm install
-cp .env.example .env
-npx prisma db push
-npm run seed
-npm run dev
-```
-
-- API: `http://localhost:3333/api/v1`
-- Documentação (Swagger UI): `http://localhost:3333/api/docs`
-- Health check: `http://localhost:3333/health`
-
-Usuários criados pelo seed (senha `admin12345` para todos):
-
-| Papel | E-mail |
-|---|---|
-| ADMIN | `admin@biblioteca.dev` |
-| LIBRARIAN | `balcao@biblioteca.dev` |
-| MEMBER | `leitor@biblioteca.dev` |
 
 ### Testes
 
@@ -124,6 +115,7 @@ Configuráveis por variável de ambiente (`.env`):
 | `MAX_ACTIVE_LOANS` | 3 | Empréstimos simultâneos por leitor |
 | `FINE_PER_DAY` | 1.50 | Multa por dia de atraso |
 | `MAX_RENEWALS` | 1 | Renovações por empréstimo |
+| `SENHA_PADRAO` | mudar@123 | Senha de toda conta criada pela direção, com troca obrigatória |
 
 **Empréstimo** é recusado se: o usuário está inativo, tem qualquer empréstimo em atraso, atingiu o limite de simultâneos, ou o exemplar não está disponível. Exemplar `RESERVED` só sai para quem está na frente da fila.
 
@@ -143,7 +135,10 @@ Configuráveis por variável de ambiente (`.env`):
 | Emprestar / renovar | só para si | qualquer leitor | qualquer leitor |
 | Registrar devolução | — | ✓ | ✓ |
 | Gerenciar acervo e exemplares | — | ✓ | ✓ |
-| Gerenciar usuários e excluir | — | leitura | ✓ |
+| Gerenciar acervo e estoque | — | ✓ | ✓ |
+| Criar conta de equipe | — | — | ✓ |
+| Resetar senha de alguém | — | — | ✓ |
+| Desativar usuário | — | — | ✓ |
 
 O escopo do MEMBER é aplicado no **service**, não na rota: `GET /loans?userId=<outro>` não devolve erro, devolve os empréstimos do próprio solicitante. Filtro do cliente nunca amplia permissão.
 
@@ -181,7 +176,10 @@ POST   /reservations             Entra na fila (devolve posição)
 DELETE /reservations/:id         Cancela e libera o exemplar
 POST   /reservations/expire-stale  Rotina de expiração (cron)     [LIBRARIAN]
 
-GET    /users                    Gestão de leitores               [LIBRARIAN/ADMIN]
+GET    /users                    Lista quem tem acesso            [LIBRARIAN/ADMIN]
+POST   /users                    Cria conta com a senha padrão    [ADMIN]
+POST   /users/:id/reset-password Devolve a conta à senha padrão   [ADMIN]
+POST   /auth/change-password     Troca a própria senha
 ```
 
 ### Busca no catálogo
@@ -257,6 +255,7 @@ O compose sobe a API com **Postgres**. Para usar, troque o provider em `prisma/s
 
 Honestidade sobre o escopo — o que ficou de fora e por quê:
 
+- **Redefinição de senha por e-mail.** Hoje o "esqueci a senha" passa pela direção, presencialmente. Self-service depende de um provedor de envio (Resend, SES) e de token de uso único com validade — nada disso está feito, e a tela diz isso ao usuário em vez de fingir.
 - **Refresh token.** Hoje é um único access token de 1 dia. Rotação com refresh exige tabela de sessão e revogação, e não muda nada nas regras de negócio que este projeto quer mostrar.
 - **Migrations versionadas.** Uso `db push` para agilidade em SQLite; em produção o caminho é `prisma migrate` com histórico versionado.
 - **Cron real para `expire-stale`.** Está exposto como endpoint administrativo em vez de agendador embutido, porque quem agenda em produção é a infra (cron do sistema, worker, scheduler do provedor), não o processo da API.

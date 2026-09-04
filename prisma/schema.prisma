@@ -43,6 +43,10 @@ model User {
   passwordHash String
   role         Role     @default(MEMBER)
   active       Boolean  @default(true)
+  /// Conta criada pela direcao com a senha padrao, ou senha resetada por ela.
+  /// Enquanto for true o sistema so deixa passar pela troca de senha: senha
+  /// padrao que nunca muda e a mesma senha para a equipe inteira.
+  mustChangePassword Boolean @default(false)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 

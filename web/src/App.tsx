@@ -11,8 +11,11 @@ import { Acervo } from './screens/Acervo';
 import { Emprestimos } from './screens/Emprestimos';
 import { Reservas } from './screens/Reservas';
 import { Gestao } from './screens/Gestao';
+import { Equipe } from './screens/Equipe';
+import { TrocarSenha } from './screens/TrocarSenha';
+import { portaAtual } from './rota';
 
-type Tarefa = 'balcao' | 'acervo' | 'emprestimos' | 'reservas' | 'gestao';
+type Tarefa = 'balcao' | 'acervo' | 'emprestimos' | 'reservas' | 'gestao' | 'equipe';
 
 /** `gestao` fica atrás de papel: o leitor nem vê, e o servidor recusaria. */
 const TAREFAS: { id: Tarefa; nome: string; icone: IconName; papeis?: Role[] }[] = [
@@ -21,12 +24,21 @@ const TAREFAS: { id: Tarefa; nome: string; icone: IconName; papeis?: Role[] }[] 
   { id: 'emprestimos', nome: 'Empréstimos', icone: 'pilha' },
   { id: 'reservas', nome: 'Reservas', icone: 'reserva' },
   { id: 'gestao', nome: 'Gestão', icone: 'estante', papeis: ['ADMIN', 'LIBRARIAN'] },
+  { id: 'equipe', nome: 'Equipe', icone: 'chave', papeis: ['ADMIN'] },
 ];
 
 export function App() {
   const [user, setUser] = useState<User | null>(null);
   const [carregando, setCarregando] = useState(true);
   const [tarefa, setTarefa] = useState<Tarefa>('balcao');
+  const [porta, setPorta] = useState(portaAtual);
+
+  // As duas portas sao URLs de verdade: voltar no navegador tem que funcionar.
+  useEffect(() => {
+    const aoVoltar = () => setPorta(portaAtual());
+    window.addEventListener('popstate', aoVoltar);
+    return () => window.removeEventListener('popstate', aoVoltar);
+  }, []);
 
   useEffect(() => {
     if (!token.get()) {
@@ -39,6 +51,17 @@ export function App() {
       .catch(() => token.clear())
       .finally(() => setCarregando(false));
   }, []);
+
+  /** Direcao entrando pela porta dela cai direto na gestao, nao no balcao. */
+  const entrou = useCallback(
+    (u: User) => {
+      setUser(u);
+      if (portaAtual() === 'direcao' && u.role === 'ADMIN' && !u.mustChangePassword) {
+        setTarefa('gestao');
+      }
+    },
+    [],
+  );
 
   const sair = useCallback(() => {
     token.clear();
@@ -66,7 +89,10 @@ export function App() {
     );
   }
 
-  if (!user) return <Login onEntrar={setUser} />;
+  if (!user) return <Login porta={porta} onEntrar={entrou} />;
+
+  // Trava de primeiro acesso: senha padrao nao passa daqui.
+  if (user.mustChangePassword) return <TrocarSenha user={user} onTrocada={setUser} />;
 
   return (
     <div className="app">
@@ -79,6 +105,7 @@ export function App() {
           {tarefa === 'emprestimos' && <Emprestimos />}
           {tarefa === 'reservas' && <Reservas />}
           {tarefa === 'gestao' && <Gestao />}
+          {tarefa === 'equipe' && <Equipe eu={user} />}
         </div>
       </main>
 
