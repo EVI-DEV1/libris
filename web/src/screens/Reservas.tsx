@@ -2,17 +2,20 @@ import { useCallback, useEffect, useState } from 'react';
 import { api } from '../api/client';
 import type { Reservation } from '../api/types';
 import { dia } from '../format';
-import { Btn, Carregando, Counter, Recado, Tag, Vazio, Win } from '../ui/kit';
+import { Btn, Carregando, Carta, Recado, Selo, Vazio } from '../ui/kit';
 import { msg } from './Balcao';
 
-type Filtro = 'WAITING' | 'READY';
+type Filtro = 'READY' | 'WAITING';
+
+const FILTROS: { id: Filtro; nome: string }[] = [
+  { id: 'READY', nome: 'Separadas no balcão' },
+  { id: 'WAITING', nome: 'Na fila' },
+];
 
 export function Reservas() {
   const [filtro, setFiltro] = useState<Filtro>('READY');
   const [reservas, setReservas] = useState<Reservation[] | null>(null);
-  const [recado, setRecado] = useState<{ kind: 'ok' | 'bloqueio' | 'aviso'; texto: string } | null>(
-    null,
-  );
+  const [aviso, setAviso] = useState<{ tipo: 'ok' | 'trava' | 'aviso'; texto: string } | null>(null);
 
   const carregar = useCallback(() => {
     setReservas(null);
@@ -21,7 +24,7 @@ export function Reservas() {
       .then((r) => setReservas(r.data))
       .catch((e) => {
         setReservas([]);
-        setRecado({ kind: 'bloqueio', texto: msg(e) });
+        setAviso({ tipo: 'trava', texto: msg(e) });
       });
   }, [filtro]);
 
@@ -30,18 +33,18 @@ export function Reservas() {
   async function cancelar(id: string) {
     try {
       await api.cancelReservation(id);
-      setRecado({ kind: 'ok', texto: 'Reserva cancelada. O exemplar voltou para a fila.' });
+      setAviso({ tipo: 'ok', texto: 'Reserva cancelada. O exemplar voltou para a fila.' });
       carregar();
     } catch (e) {
-      setRecado({ kind: 'bloqueio', texto: msg(e) });
+      setAviso({ tipo: 'trava', texto: msg(e) });
     }
   }
 
   async function expirar() {
     try {
       const r = await api.expireStale();
-      setRecado({
-        kind: r.expiradas > 0 ? 'ok' : 'aviso',
+      setAviso({
+        tipo: r.expiradas > 0 ? 'ok' : 'aviso',
         texto:
           r.expiradas > 0
             ? `${r.expiradas} reserva(s) vencida(s) liberada(s). Os exemplares voltaram a circular.`
@@ -49,123 +52,130 @@ export function Reservas() {
       });
       carregar();
     } catch (e) {
-      setRecado({ kind: 'bloqueio', texto: msg(e) });
+      setAviso({ tipo: 'trava', texto: msg(e) });
     }
   }
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 'calc(var(--u) * 4)',
-        maxWidth: 1100,
-        width: '100%',
-      }}
-    >
-      <div
-        className="win"
+    <div style={{ display: 'grid', gap: 'calc(var(--u) * 6)' }}>
+      <header
         style={{
-          padding: 'calc(var(--u) * 3)',
           display: 'flex',
-          gap: 'calc(var(--u) * 2)',
+          alignItems: 'flex-end',
+          justifyContent: 'space-between',
+          gap: 'calc(var(--u) * 4)',
           flexWrap: 'wrap',
-          alignItems: 'center',
         }}
       >
-        <Btn variant={filtro === 'READY' ? 'primary' : 'ghost'} onClick={() => setFiltro('READY')}>
-          Separadas no balcão
-        </Btn>
-        <Btn variant={filtro === 'WAITING' ? 'primary' : 'ghost'} onClick={() => setFiltro('WAITING')}>
-          Na fila
-        </Btn>
-        <span style={{ flex: 1 }} />
-        <Btn icon="reserva" onClick={expirar}>
+        <div>
+          <h1>Reservas</h1>
+          <p className="sub" style={{ margin: 'calc(var(--u) * 1.5) 0 0', fontSize: 15 }}>
+            A fila é por ordem de chegada, e quem espera tem prioridade sobre quem renova.
+          </p>
+        </div>
+        <Btn icone="reserva" onClick={expirar}>
           Liberar as vencidas
         </Btn>
+      </header>
+
+      <div className="abas" role="tablist">
+        {FILTROS.map((f) => (
+          <button
+            key={f.id}
+            role="tab"
+            aria-selected={filtro === f.id}
+            onClick={() => setFiltro(f.id)}
+            className={`toque aba ${filtro === f.id ? 'aba-ativa' : ''}`}
+          >
+            {f.nome}
+          </button>
+        ))}
       </div>
 
-      {recado ? (
-        <Recado kind={recado.kind} onClose={() => setRecado(null)}>
-          {recado.texto}
+      {aviso ? (
+        <Recado tipo={aviso.tipo} onFechar={() => setAviso(null)}>
+          {aviso.texto}
         </Recado>
       ) : null}
 
-      <Win
-        grow
-        title={filtro === 'READY' ? 'Esperando retirada' : 'Fila de espera'}
-        icon="reserva"
-        right={
-          reservas ? (
-            <span className="label" style={{ color: 'var(--pale)', opacity: 1 }}>
-              <Counter value={reservas.length} places={2} />
-            </span>
-          ) : null
-        }
+      <Carta
+        titulo={filtro === 'READY' ? 'Esperando retirada' : 'Fila de espera'}
+        icone="reserva"
+        padding={false}
+        direita={reservas ? <Selo>{reservas.length}</Selo> : null}
       >
         {reservas === null ? (
-          <Carregando />
+          <div style={{ padding: 'calc(var(--u) * 5)' }}>
+            <Carregando linhas={3} />
+          </div>
         ) : reservas.length === 0 ? (
-          <Vazio>
+          <Vazio icone="reserva">
             {filtro === 'READY'
               ? 'Nenhum exemplar separado no balcão.'
               : 'Ninguém na fila. Todo mundo achou o que queria na estante.'}
           </Vazio>
         ) : (
-          <div style={{ display: 'grid', gap: 'calc(var(--u) * 2)' }}>
+          <ul className="lista">
             {reservas.map((r, i) => {
               const vencida = r.expiresAt ? new Date(r.expiresAt).getTime() < Date.now() : false;
               return (
-                <div
-                  key={r.id}
-                  className="win-flat"
-                  style={{
-                    padding: 'calc(var(--u) * 3)',
-                    borderColor: vencida ? 'var(--lamp)' : 'var(--ink)',
-                    display: 'grid',
-                    gridTemplateColumns: 'auto minmax(0, 1fr) auto auto',
-                    gap: 'calc(var(--u) * 3)',
-                    alignItems: 'center',
-                  }}
-                >
-                  {/* A fila é FIFO: a posição é a informação, então ela é o primeiro elemento. */}
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-chrome)',
-                      background: 'var(--ink)',
-                      color: 'var(--pale)',
-                      borderRadius: 4,
-                      padding: '4px 7px',
-                      fontSize: 12,
-                    }}
-                  >
-                    <Counter value={i + 1} places={2} />
-                  </span>
+                <li key={r.id} className="linha">
+                  {/* A fila é FIFO: a posição é a informação, então vem primeiro. */}
+                  <span className="posicao">{i + 1}</span>
 
-                  <span style={{ minWidth: 0 }}>
-                    <strong style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <span style={{ flex: '1 1 240px', minWidth: 0 }}>
+                    <strong style={{ display: 'block', fontSize: 14.5, letterSpacing: '-0.01em' }}>
                       {r.book.title}
                     </strong>
-                    <span className="dado">{r.user.name}</span>
+                    <span className="sub">{r.user.name}</span>
                   </span>
 
                   {r.expiresAt ? (
-                    <Tag alarm={vencida}>
+                    <Selo tom={vencida ? 'trava' : 'espera'} ponto={vencida}>
                       {vencida ? 'prazo vencido' : `retirar até ${dia(r.expiresAt)}`}
-                    </Tag>
+                    </Selo>
                   ) : (
-                    <Tag>desde {dia(r.createdAt)}</Tag>
+                    <Selo>desde {dia(r.createdAt)}</Selo>
                   )}
 
-                  <Btn icon="x" onClick={() => cancelar(r.id)}>
+                  <Btn variant="fantasma" size="sm" icone="x" onClick={() => cancelar(r.id)}>
                     Cancelar
                   </Btn>
-                </div>
+                </li>
               );
             })}
-          </div>
+          </ul>
         )}
-      </Win>
+      </Carta>
+
+      <style>{`
+        .abas {
+          display: inline-flex; gap: 2px; padding: 3px;
+          background: var(--campo-2); border-radius: 12px; width: fit-content;
+        }
+        .aba {
+          border: 0; background: transparent; cursor: pointer;
+          font: inherit; font-size: 14px; font-weight: 700; letter-spacing: -0.01em;
+          color: var(--tinta-2);
+          padding: calc(var(--u) * 2) calc(var(--u) * 4);
+          border-radius: 9px;
+        }
+        .aba-ativa { background: var(--papel); color: var(--tinta); box-shadow: var(--sombra-1); }
+        .lista { list-style: none; margin: 0; padding: 0; }
+        .linha {
+          display: flex; align-items: center; gap: calc(var(--u) * 4);
+          padding: calc(var(--u) * 3.5) calc(var(--u) * 5);
+          border-bottom: 1px solid var(--linha); flex-wrap: wrap;
+        }
+        .linha:last-child { border-bottom: 0; }
+        .linha:hover { background: var(--campo); }
+        .posicao {
+          width: 30px; height: 30px; flex: none; border-radius: 9px;
+          background: var(--acao-fraca); color: var(--acao-tinta);
+          display: grid; place-items: center;
+          font-family: var(--mono); font-size: 13px; font-weight: 700;
+        }
+      `}</style>
     </div>
   );
 }

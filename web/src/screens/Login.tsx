@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { api, ApiError, token } from '../api/client';
 import type { User } from '../api/types';
 import { brand } from '../brand';
-import { Btn, Field, Recado } from '../ui/kit';
+import { Icon } from '../ui/Icon';
+import { Btn, Campo, Recado } from '../ui/kit';
 
 export function Login({ onEntrar }: { onEntrar: (u: User) => void }) {
   const [email, setEmail] = useState('');
@@ -32,63 +33,73 @@ export function Login({ onEntrar }: { onEntrar: (u: User) => void }) {
   }
 
   return (
-    <main
-      style={{
-        minHeight: '100dvh',
-        display: 'grid',
-        placeItems: 'center',
-        padding: 'calc(var(--u) * 5)',
-        background: 'var(--mid)',
-      }}
-    >
-      <div style={{ width: 'min(420px, 100%)' }}>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 'calc(var(--u) * 3)',
-            marginBottom: 'calc(var(--u) * 5)',
-          }}
-        >
-          <span className="dither" style={{ width: 40, height: 40, borderRadius: 4 }} aria-hidden />
-          <div>
-            <h1 style={{ marginBottom: 2 }}>{brand.name}</h1>
-            <p className="label" style={{ margin: 0 }}>
-              {brand.tagline}
-            </p>
-          </div>
+    <main className="entrada">
+      <div className="entrada-caixa surge">
+        <span className="entrada-selo" aria-hidden>
+          <Icon name="acervo" size={26} />
+        </span>
+
+        <div>
+          <h1 style={{ fontSize: 28 }}>{brand.name}</h1>
+          <p className="sub" style={{ margin: 'calc(var(--u) * 1) 0 0', fontSize: 15 }}>
+            {brand.tagline}
+          </p>
         </div>
 
-        <form onSubmit={entrar} className="win" style={{ padding: 'calc(var(--u) * 5)' }}>
-          <div style={{ display: 'grid', gap: 'calc(var(--u) * 4)' }}>
-            <Field
-              id="email"
-              label="E-mail"
-              type="email"
-              value={email}
-              onChange={setEmail}
-              autoFocus
-            />
-            <Field
-              id="senha"
-              label="Senha"
-              type="password"
-              value={senha}
-              onChange={setSenha}
-            />
+        <form onSubmit={entrar} style={{ display: 'grid', gap: 'calc(var(--u) * 4)' }}>
+          <Campo
+            id="email"
+            label="E-mail"
+            type="email"
+            value={email}
+            onChange={setEmail}
+            autoFocus
+          />
+          <Campo id="senha" label="Senha" type="password" value={senha} onChange={setSenha} />
 
-            {erro ? <Recado kind="bloqueio">{erro}</Recado> : null}
+          {erro ? <Recado tipo="trava">{erro}</Recado> : null}
 
-            <Btn type="submit" variant="primary" loading={enviando} full icon="seta">
-              {enviando ? 'Entrando' : 'Entrar no balcão'}
-            </Btn>
-          </div>
+          <Btn type="submit" variant="acao" loading={enviando} full icone="seta">
+            {enviando ? 'Entrando' : 'Entrar'}
+          </Btn>
         </form>
 
-        <p className="dado" style={{ marginTop: 'calc(var(--u) * 4)', textAlign: 'center' }}>
-          Dados de demonstração · balcao@biblioteca.dev · admin12345
+        <p className="sub" style={{ margin: 0, textAlign: 'center', fontSize: 13 }}>
+          Demonstração · balcao@biblioteca.dev · admin12345
         </p>
       </div>
+
+      <style>{`
+        .entrada {
+          min-height: 100dvh;
+          display: grid;
+          place-items: center;
+          padding: calc(var(--u) * 6);
+          /* Um campo de cor que respira, para a entrada não ser um formulário
+             solto no branco. */
+          background:
+            radial-gradient(1100px 620px at 50% -10%, #dfe6ff 0%, transparent 62%),
+            var(--campo);
+        }
+        .entrada-caixa {
+          width: min(400px, 100%);
+          display: grid;
+          gap: calc(var(--u) * 6);
+          background: var(--papel);
+          border: 1px solid var(--linha);
+          border-radius: 20px;
+          padding: calc(var(--u) * 9) calc(var(--u) * 8);
+          box-shadow: var(--sombra-3);
+        }
+        .entrada-selo {
+          width: 52px; height: 52px;
+          border-radius: 15px;
+          background: var(--acao);
+          color: #fff;
+          display: grid; place-items: center;
+          box-shadow: var(--sombra-acao);
+        }
+      `}</style>
     </main>
   );
 }

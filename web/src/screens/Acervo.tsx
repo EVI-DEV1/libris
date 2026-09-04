@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api/client';
 import type { Book } from '../api/types';
-import { Btn, Carregando, Counter, Field, Recado, Tag, Vazio, Win } from '../ui/kit';
-import { PixelIcon } from '../ui/PixelIcon';
-import { msg, SituacaoTag } from './Balcao';
+import { Icon } from '../ui/Icon';
+import { Btn, Campo, Carregando, Carta, Recado, Selo, Vazio } from '../ui/kit';
+import { msg, SituacaoSelo } from './Balcao';
 
 export function Acervo() {
   const [busca, setBusca] = useState('');
@@ -11,14 +11,18 @@ export function Acervo() {
   const [livros, setLivros] = useState<Book[] | null>(null);
   const [total, setTotal] = useState(0);
   const [erro, setErro] = useState<string | null>(null);
-  const [aberto, setAberto] = useState<Book | null>(null);
+  const [aberto, setAberto] = useState<string | null>(null);
 
   useEffect(() => {
     let vivo = true;
     setErro(null);
     const t = setTimeout(() => {
       api
-        .books({ search: busca.trim() || undefined, available: soDisponiveis || undefined, perPage: 12 })
+        .books({
+          search: busca.trim() || undefined,
+          available: soDisponiveis || undefined,
+          perPage: 12,
+        })
         .then((r) => {
           if (!vivo) return;
           setLivros(r.data);
@@ -33,30 +37,29 @@ export function Acervo() {
   }, [busca, soDisponiveis]);
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 'calc(var(--u) * 4)',
-        maxWidth: 1100,
-        width: '100%',
-      }}
-    >
-      <div className="win" style={{ padding: 'calc(var(--u) * 4)' }}>
-        <div style={{ display: 'flex', gap: 'calc(var(--u) * 3)', alignItems: 'center', flexWrap: 'wrap' }}>
-          <div style={{ flex: '1 1 280px' }}>
-            <Field
-              id="acervo-busca"
-              label="Buscar no acervo"
-              value={busca}
-              onChange={setBusca}
-              autoFocus
-              hint="título, autor, editora ou ISBN — uma busca só cobre os quatro"
-            />
-          </div>
+    <div style={{ display: 'grid', gap: 'calc(var(--u) * 6)' }}>
+      <header>
+        <h1>Acervo</h1>
+        <p className="sub" style={{ margin: 'calc(var(--u) * 1.5) 0 0', fontSize: 15 }}>
+          Uma busca cobre título, autor, editora e ISBN de uma vez.
+        </p>
+      </header>
+
+      <div className="filtro">
+        <div style={{ flex: '1 1 300px' }}>
+          <Campo
+            id="acervo-busca"
+            label="Buscar"
+            value={busca}
+            onChange={setBusca}
+            autoFocus
+            icone="busca"
+          />
+        </div>
+        <div style={{ paddingTop: 26 }}>
           <Btn
-            variant={soDisponiveis ? 'primary' : 'ghost'}
-            icon={soDisponiveis ? 'check' : 'acervo'}
+            variant={soDisponiveis ? 'acao' : 'suave'}
+            icone={soDisponiveis ? 'check' : 'estante'}
             onClick={() => setSoDisponiveis((v) => !v)}
           >
             Só o que está na estante
@@ -64,59 +67,79 @@ export function Acervo() {
         </div>
       </div>
 
-      {erro ? <Recado kind="bloqueio">{erro}</Recado> : null}
+      {erro ? <Recado tipo="trava">{erro}</Recado> : null}
 
-      <Win
-        grow
-        title="Acervo"
-        icon="acervo"
-        right={
-          livros ? (
-            <span className="label" style={{ color: 'var(--pale)', opacity: 1 }}>
-              <Counter value={total} /> obras
-            </span>
-          ) : null
-        }
+      <Carta
+        titulo="Obras"
+        icone="acervo"
+        padding={false}
+        direita={livros ? <Selo>{total} no total</Selo> : null}
       >
         {livros === null ? (
-          <Carregando />
-        ) : livros.length === 0 ? (
-          <Vazio>Nada no acervo bate com essa busca.</Vazio>
-        ) : (
-          <div style={{ display: 'grid', gap: 'calc(var(--u) * 2)' }}>
-            {livros.map((b) => (
-              <button
-                key={b.id}
-                onClick={() => setAberto(b)}
-                className="win-flat"
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr auto',
-                  gap: 'calc(var(--u) * 3)',
-                  alignItems: 'center',
-                  padding: 'calc(var(--u) * 3)',
-                  cursor: 'pointer',
-                  font: 'inherit',
-                  color: 'inherit',
-                  textAlign: 'left',
-                }}
-              >
-                <span style={{ minWidth: 0 }}>
-                  <strong style={{ display: 'block' }}>{b.title}</strong>
-                  <span className="dado">
-                    {b.authors.map((a) => a.name).join(', ')}
-                    {b.publishedYear ? ` · ${b.publishedYear}` : ''}
-                    {b.category ? ` · ${b.category.name}` : ''}
-                  </span>
-                </span>
-                <Disponibilidade livre={b.availableCopies ?? 0} total={b.totalCopies} />
-              </button>
-            ))}
+          <div style={{ padding: 'calc(var(--u) * 5)' }}>
+            <Carregando linhas={4} />
           </div>
-        )}
-      </Win>
+        ) : livros.length === 0 ? (
+          <Vazio icone="busca">Nada no acervo bate com essa busca. Tente outro termo.</Vazio>
+        ) : (
+          <ul className="lista">
+            {livros.map((b) => (
+              <li key={b.id}>
+                <button
+                  onClick={() => setAberto(aberto === b.id ? null : b.id)}
+                  className="obra"
+                  aria-expanded={aberto === b.id}
+                >
+                  <span style={{ flex: '1 1 260px', minWidth: 0, textAlign: 'left' }}>
+                    <strong style={{ display: 'block', fontSize: 15, letterSpacing: '-0.01em' }}>
+                      {b.title}
+                    </strong>
+                    <span className="sub">
+                      {b.authors.map((a) => a.name).join(', ')}
+                      {b.publishedYear ? ` · ${b.publishedYear}` : ''}
+                      {b.category ? ` · ${b.category.name}` : ''}
+                    </span>
+                  </span>
 
-      {aberto ? <FichaDaObra id={aberto.id} onFechar={() => setAberto(null)} /> : null}
+                  <Disponibilidade livre={b.availableCopies ?? 0} total={b.totalCopies} />
+
+                  <span
+                    style={{
+                      color: 'var(--tinta-3)',
+                      transform: aberto === b.id ? 'rotate(90deg)' : 'none',
+                      transition: 'transform 0.2s var(--saida)',
+                    }}
+                  >
+                    <Icon name="seta" size={16} />
+                  </span>
+                </button>
+
+                {aberto === b.id ? <Exemplares id={b.id} /> : null}
+              </li>
+            ))}
+          </ul>
+        )}
+      </Carta>
+
+      <style>{`
+        .filtro {
+          display: flex; gap: calc(var(--u) * 4); align-items: flex-start; flex-wrap: wrap;
+          background: var(--papel); border: 1px solid var(--linha);
+          border-radius: var(--r-g); padding: calc(var(--u) * 5);
+          box-shadow: var(--sombra-1);
+        }
+        .lista { list-style: none; margin: 0; padding: 0; }
+        .lista > li { border-bottom: 1px solid var(--linha); }
+        .lista > li:last-child { border-bottom: 0; }
+        .obra {
+          display: flex; align-items: center; gap: calc(var(--u) * 4);
+          width: 100%; padding: calc(var(--u) * 4) calc(var(--u) * 5);
+          background: transparent; border: 0; cursor: pointer;
+          font: inherit; color: var(--tinta); flex-wrap: wrap;
+          transition: background-color 0.14s ease;
+        }
+        .obra:hover { background: var(--campo); }
+      `}</style>
     </div>
   );
 }
@@ -124,85 +147,68 @@ export function Acervo() {
 function Disponibilidade({ livre, total }: { livre: number; total: number }) {
   return (
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'calc(var(--u) * 2)' }}>
-      <Tag strong={livre > 0} alarm={livre === 0}>
-        {livre > 0 ? 'na estante' : 'tudo fora'}
-      </Tag>
-      <span className="dado num">
-        <Counter value={livre} /> de <Counter value={total} />
-      </span>
+      <Selo tom={livre > 0 ? 'ok' : 'neutro'} ponto>
+        {livre > 0 ? `${livre} na estante` : 'tudo emprestado'}
+      </Selo>
+      <span className="sub num">de {total}</span>
     </span>
   );
 }
 
-function FichaDaObra({ id, onFechar }: { id: string; onFechar: () => void }) {
+function Exemplares({ id }: { id: string }) {
   const [livro, setLivro] = useState<Book | null>(null);
 
   useEffect(() => {
     setLivro(null);
-    api.book(id).then(setLivro).catch(() => setLivro(null));
+    api
+      .book(id)
+      .then(setLivro)
+      .catch(() => setLivro(null));
   }, [id]);
 
   return (
-    <Win
-      title={livro ? livro.title : 'Abrindo a ficha'}
-      icon="acervo"
-      right={
-        <button
-          onClick={onFechar}
-          aria-label="Fechar ficha"
-          style={{
-            background: 'transparent',
-            border: '2px solid var(--pale)',
-            color: 'var(--pale)',
-            borderRadius: 4,
-            padding: 3,
-            cursor: 'pointer',
-            display: 'inline-flex',
-          }}
-        >
-          <PixelIcon name="x" size={11} />
-        </button>
-      }
-    >
+    <div className="gaveta surge">
       {!livro ? (
-        <Carregando />
+        <Carregando linhas={2} />
       ) : (
-        <div style={{ display: 'grid', gap: 'calc(var(--u) * 4)' }}>
-          <p className="dado" style={{ margin: 0 }}>
-            {livro.authors.map((a) => a.name).join(', ')} · ISBN {livro.isbn}
-            {livro.publisher ? ` · ${livro.publisher}` : ''}
-          </p>
-
-          {livro.synopsis ? <p className="prose" style={{ margin: 0 }}>{livro.synopsis}</p> : null}
-
-          <div>
-            <h2 style={{ marginBottom: 'calc(var(--u) * 2)' }}>Exemplares</h2>
-            <div style={{ display: 'grid', gap: 'calc(var(--u) * 1.5)' }}>
-              {(livro.copies ?? []).map((c) => (
-                <div
-                  key={c.id}
-                  className="win-flat"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 'calc(var(--u) * 3)',
-                    padding: 'calc(var(--u) * 2.5) calc(var(--u) * 3)',
-                  }}
-                >
-                  <strong style={{ fontFamily: 'var(--font-chrome)', fontSize: 12 }}>{c.code}</strong>
-                  <span className="dado" style={{ flex: 1 }}>
-                    {c.shelf ? `estante ${c.shelf}` : 'sem estante'}
-                  </span>
-                  <SituacaoTag status={c.status} />
-                </div>
-              ))}
-              {(livro.copies ?? []).length === 0 ? (
-                <Vazio>Esta obra não tem exemplar tombado.</Vazio>
-              ) : null}
-            </div>
+        <>
+          {livro.synopsis ? (
+            <p className="sub prosa" style={{ margin: '0 0 calc(var(--u) * 4)' }}>
+              {livro.synopsis}
+            </p>
+          ) : null}
+          <div style={{ display: 'grid', gap: 'calc(var(--u) * 2)' }}>
+            {(livro.copies ?? []).map((c) => (
+              <div key={c.id} className="exemplar">
+                <span className="cod">{c.code}</span>
+                <span className="sub" style={{ flex: 1 }}>
+                  {c.shelf ? `estante ${c.shelf}` : 'sem estante definida'}
+                </span>
+                <SituacaoSelo status={c.status} />
+              </div>
+            ))}
+            {(livro.copies ?? []).length === 0 ? (
+              <p className="sub" style={{ margin: 0 }}>
+                Esta obra não tem exemplar tombado.
+              </p>
+            ) : null}
           </div>
-        </div>
+        </>
       )}
-    </Win>
+
+      <style>{`
+        .gaveta {
+          padding: calc(var(--u) * 5);
+          background: var(--campo);
+          border-top: 1px solid var(--linha);
+        }
+        .exemplar {
+          display: flex; align-items: center; gap: calc(var(--u) * 3);
+          padding: calc(var(--u) * 2.5) calc(var(--u) * 3.5);
+          background: var(--papel); border: 1px solid var(--linha);
+          border-radius: var(--r);
+        }
+      `}</style>
+    </div>
   );
 }

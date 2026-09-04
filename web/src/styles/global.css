@@ -1,99 +1,111 @@
 /* =========================================================================
-   LOMBADA — campo de quatro verdes
+   CIRCULA — sistema visual
 
-   Exatamente quatro verdes. A lâmpada vermelha só acende como PONTO, nunca
-   como texto: vermelho sobre verde-pálido dá 2.16:1, e o mundo diz que ela é
-   uma lâmpada, não uma tinta.
+   O que a versão anterior errou, e que este arquivo existe para corrigir:
+   ela era retrô e sem vida. Quatro verdes chapados, tipo bitmap, xadrez.
+   Bonito de conceito, morto na tela, e velho para um produto que se pretende
+   vender hoje.
 
-   Hierarquia é inversão e caixa. O quinto tom não é cor nova: é dither, e o
-   dither é CAMPO — chapa a faixa inteira, não enfeita um quadradinho.
+   Aqui a vida vem de três lugares, nenhum deles decorativo:
+   1. PROFUNDIDADE — superfícies em camadas, com sombra que tem deslocamento
+      E desfoque. Nada de bloco duro.
+   2. UMA COR QUE MANDA — o cobalto ocupa regiões inteiras (a ação primária, a
+      barra, o estado ativo), não fica polvilhado em detalhezinho.
+   3. MOVIMENTO QUE RESPONDE — curva de saída exponencial, a partir de um
+      estado já visível. A tela reage ao toque, não faz número.
 
-   Escala tipográfica em múltiplos de 4: 12 / 16 / 20 / 24 / 32. Fonte bitmap
-   fora do múltiplo inteiro rasteriza torto, e o borrão aparece na tela.
+   Legibilidade é requisito, não gosto: isto é tela de trabalho de 8 horas.
+   Todo par de texto/fundo aqui foi medido, e os valores estão anotados.
    ========================================================================= */
 
 /* --- Fontes próprias, servidas daqui ------------------------------------- */
-/* Rede de biblioteca institucional bloqueia CDN. Um produto que vende o
-   próprio mundo visual não pode hospedá-lo na casa dos outros. */
+/* Rede de biblioteca institucional bloqueia CDN. Um produto que vende a
+   própria identidade não pode hospedá-la na casa dos outros. */
 
 @font-face {
-  font-family: 'Pixelify Sans';
+  font-family: 'Manrope';
   font-style: normal;
-  font-weight: 400 700;
+  font-weight: 400 800;
   font-display: swap;
-  src: url('../fonts/pixelify-latin.woff2') format('woff2');
+  src: url('../fonts/sans-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
     U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
     U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: 'Pixelify Sans';
+  font-family: 'Manrope';
   font-style: normal;
-  font-weight: 400 700;
+  font-weight: 400 800;
   font-display: swap;
-  src: url('../fonts/pixelify-latin-ext.woff2') format('woff2');
+  src: url('../fonts/sans-latin-ext.woff2') format('woff2');
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
     U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
     U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 @font-face {
-  font-family: 'Silkscreen';
+  font-family: 'JetBrains Mono';
   font-style: normal;
-  font-weight: 400;
+  font-weight: 400 700;
   font-display: swap;
-  src: url('../fonts/silkscreen-400-latin.woff2') format('woff2');
+  src: url('../fonts/mono-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
     U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
     U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: 'Silkscreen';
+  font-family: 'JetBrains Mono';
   font-style: normal;
-  font-weight: 400;
+  font-weight: 400 700;
   font-display: swap;
-  src: url('../fonts/silkscreen-400-latin-ext.woff2') format('woff2');
+  src: url('../fonts/mono-latin-ext.woff2') format('woff2');
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
-    U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-@font-face {
-  font-family: 'Silkscreen';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('../fonts/silkscreen-700-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
-    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
-    U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Silkscreen';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('../fonts/silkscreen-700-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
-    U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
+    U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
 :root {
-  --pale: #9bbc0f; /* fundo das janelas */
-  --mid: #8bac0f; /* campo da página, trilho */
-  --shade: #306230; /* tom médio: dither, bordas de sombra, faixas */
-  --ink: #0f380f; /* tinta: TODO texto */
-  --lamp: #d43a2f; /* lâmpada. ponto e borda. nunca texto */
+  /* Tinta e superfícies. Fundo levemente frio para o branco não ferir numa
+     jornada inteira; cartões em branco puro, que assim ganham relevo sozinhos. */
+  --tinta: #0d1526; /* texto principal — 16.1:1 sobre --papel */
+  --tinta-2: #4a5568; /* texto secundário — 7.4:1 sobre --papel */
+  --tinta-3: #6b7689; /* texto terciário — 4.8:1 sobre --papel, ainda passa */
+  --papel: #ffffff;
+  --campo: #f2f5fa; /* fundo da página */
+  --campo-2: #e6ebf4; /* faixas, estados de repouso */
+  --linha: #dbe2ee; /* divisórias */
 
-  /* Grade de pixel: tudo é múltiplo de 4. */
+  /* A cor que manda. Cobalto: mais elétrico que o índigo de praxe, e não é o
+     azul-corporativo morno. Ocupa região inteira, nunca detalhe. */
+  --acao: #2f57ff;
+  --acao-escura: #1f3fd8;
+  --acao-fraca: #eef1ff; /* campo claro da mesma família */
+  --acao-tinta: #1b2f9e; /* texto sobre --acao-fraca — 8.2:1 */
+
+  /* Sinais. Só três, e cada um significa uma coisa só. */
+  --alerta: #b45309; /* atenção: vence hoje, prazo curto — 4.6:1 sobre papel */
+  --alerta-fraca: #fef3e2;
+  --trava: #c02638; /* trava o atendimento — 6.0:1 sobre papel */
+  --trava-fraca: #fdeef0;
+  --ok: #0f7b52; /* liberado — 4.8:1 sobre papel */
+  --ok-fraca: #e7f6ef;
+
+  /* Grade de 4px. */
   --u: 4px;
-  --border: 3px;
-  --radius: 6px;
+  --r: 10px; /* raio padrão */
+  --r-g: 16px; /* raio de superfície grande */
 
-  /* Escala tipográfica, toda em múltiplo de 4. */
-  --t-chrome: 12px; /* caixa-alta de cromo: rótulo, botão, etiqueta */
-  --t-corpo: 16px; /* dado que se lê: título, nome, data, valor */
-  --t-h2: 20px;
+  --sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
 
-  --font-chrome: 'Silkscreen', 'Courier New', monospace;
-  --font-body: 'Pixelify Sans', 'Silkscreen', 'Courier New', monospace;
+  /* Profundidade: deslocamento E desfoque, sempre. Três degraus, não mais. */
+  --sombra-1: 0 1px 2px rgba(13, 21, 38, 0.06), 0 1px 3px rgba(13, 21, 38, 0.04);
+  --sombra-2: 0 2px 4px rgba(13, 21, 38, 0.05), 0 8px 20px -6px rgba(13, 21, 38, 0.12);
+  --sombra-3: 0 4px 8px rgba(13, 21, 38, 0.06), 0 20px 40px -12px rgba(13, 21, 38, 0.2);
+  --sombra-acao: 0 2px 4px rgba(47, 87, 255, 0.2), 0 10px 24px -8px rgba(47, 87, 255, 0.45);
+
+  /* Saída exponencial: rápida no começo, assenta devagar. É o que faz a tela
+     parecer viva em vez de animada. */
+  --saida: cubic-bezier(0.16, 1, 0.3, 1);
 
   color-scheme: light;
 }
@@ -110,143 +122,51 @@ body,
 
 body {
   margin: 0;
-  background: var(--ink);
-  color: var(--ink);
-  font-family: var(--font-body);
-  font-size: var(--t-corpo);
-  line-height: 1.5;
-  /* Sem antialias: a tela é um campo de pixels, e borda macia mente sobre isso. */
-  -webkit-font-smoothing: none;
-  font-smooth: never;
+  background: var(--campo);
+  color: var(--tinta);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 /* --- Superfícies que o navegador desenha e que também são nossas ---------- */
 
 ::selection {
-  background: var(--ink);
-  color: var(--pale);
+  background: var(--acao);
+  color: #fff;
 }
 
-/*
-  Sem placeholder nesta interface. Dentro de quatro verdes não existe tom que
-  seja ao mesmo tempo apagado o bastante para não parecer valor digitado e
-  escuro o bastante para passar em 4.5:1 — o --shade dá 3.29. O exemplo mora
-  na linha de dica embaixo do campo, em tinta cheia.
-*/
 ::placeholder {
-  color: transparent;
+  color: var(--tinta-3);
+  opacity: 1;
 }
 
 :focus-visible {
-  outline: var(--border) solid var(--ink);
+  outline: 2px solid var(--acao);
   outline-offset: 2px;
+  border-radius: 4px;
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--shade) var(--mid);
+  scrollbar-color: #c3ccdb transparent;
 }
-
 *::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
 }
 *::-webkit-scrollbar-track {
-  background: var(--mid);
+  background: transparent;
 }
 *::-webkit-scrollbar-thumb {
-  background: var(--shade);
-  border: 2px solid var(--mid);
+  background: #c3ccdb;
+  border-radius: 99px;
+  border: 3px solid var(--campo);
 }
 *::-webkit-scrollbar-thumb:hover {
-  background: var(--ink);
-}
-
-/* Todo número do balcão é tabular: dígito não pode dançar entre linhas. */
-.num {
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: 'tnum' 1;
-}
-
-/* --- Dither: o quinto tom, feito de xadrez, não de cor nova --------------- */
-
-.dither {
-  background-image:
-    linear-gradient(45deg, var(--shade) 25%, transparent 25%),
-    linear-gradient(-45deg, var(--shade) 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, var(--shade) 75%),
-    linear-gradient(-45deg, transparent 75%, var(--shade) 75%);
-  background-size: 8px 8px;
-  background-position: 0 0, 0 4px, 4px -4px, -4px 0;
-}
-
-/* O registro fino. É aqui que "delicada" cabe dentro de um mundo grosso:
-   xadrez de 4px, quase um cinza, sob texto em tinta cheia. */
-.dither-fine {
-  background-image:
-    linear-gradient(45deg, var(--shade) 25%, transparent 25%),
-    linear-gradient(-45deg, var(--shade) 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, var(--shade) 75%),
-    linear-gradient(-45deg, transparent 75%, var(--shade) 75%);
-  background-size: 4px 4px;
-  background-position: 0 0, 0 2px, 2px -2px, -2px 0;
-}
-
-/* Dither claro sobre tinta: a trama do cabeçalho invertido. */
-.dither-inv {
-  background-color: var(--ink);
-  background-image:
-    linear-gradient(45deg, var(--shade) 25%, transparent 25%),
-    linear-gradient(-45deg, var(--shade) 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, var(--shade) 75%),
-    linear-gradient(-45deg, transparent 75%, var(--shade) 75%);
-  background-size: 8px 8px;
-  background-position: 0 0, 0 4px, 4px -4px, -4px 0;
-}
-
-/* --- Moldura fixa: o aparelho em volta da tela --------------------------- */
-
-.moldura {
-  border: var(--u) solid var(--ink);
-  /* Regra interna clara: a segunda linha que o mundo desenha em toda placa. */
-  box-shadow: inset 0 0 0 2px var(--pale);
-}
-
-/* --- Janela: a caixa de borda grossa que organiza tudo -------------------- */
-
-.win {
-  background: var(--pale);
-  border: var(--border) solid var(--ink);
-  border-radius: var(--radius);
-  /* Camada de bloco E camada com borrão: o mundo é chapado, mas profundidade
-     sem desfoque é fantasia de bloco duro, não sistema de profundidade. */
-  box-shadow: 0 3px 0 0 var(--shade), 0 6px 10px -4px rgba(15, 56, 15, 0.45);
-}
-
-.win-flat {
-  background: var(--pale);
-  border: var(--border) solid var(--ink);
-  border-radius: var(--radius);
-}
-
-/* Inversão: é assim que esta interface diz "este é o ativo". */
-.inv {
-  background: var(--ink);
-  color: var(--pale);
-  border-color: var(--ink);
-}
-
-.win-title {
-  font-family: var(--font-chrome);
-  font-size: var(--t-chrome);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: calc(var(--u) * 2) calc(var(--u) * 3);
-  color: var(--pale);
-  border-radius: 3px 3px 0 0;
-  display: flex;
-  align-items: center;
-  gap: calc(var(--u) * 2);
+  background: #a8b4c8;
 }
 
 /* --- Tipografia ---------------------------------------------------------- */
@@ -254,75 +174,112 @@ body {
 h1,
 h2,
 h3 {
-  font-family: var(--font-chrome);
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
   margin: 0;
+  font-weight: 800;
+  letter-spacing: -0.021em;
   text-wrap: balance;
+  color: var(--tinta);
 }
 
 h1 {
-  font-size: clamp(24px, 3.4vw, 32px);
-  line-height: 1.25;
+  font-size: clamp(24px, 3vw, 32px);
+  line-height: 1.15;
 }
 h2 {
-  font-size: var(--t-h2);
-  line-height: 1.4;
+  font-size: 19px;
+  line-height: 1.3;
 }
 
-/* Rótulo de cromo. NUNCA carrega dado: só nomeia o campo ao lado. */
-.label {
-  font-family: var(--font-chrome);
-  font-size: var(--t-chrome);
-  letter-spacing: 0.06em;
+/* Rótulo: nomeia o campo ao lado. Nunca carrega dado. */
+.rotulo {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--ink);
+  color: var(--tinta-3);
 }
 
-/* Dado que o funcionário lê: nome, data, valor, título. Corpo, não cromo. */
-.dado {
-  font-family: var(--font-body);
-  font-size: var(--t-corpo);
-  color: var(--ink);
-  line-height: 1.45;
+/* Dado secundário: legível, discreto, nunca abaixo de 4.5:1. */
+.sub {
+  font-size: 13.5px;
+  color: var(--tinta-2);
 }
 
-.prose {
+/* Código de tombo, ISBN, qualquer coisa que se casa com uma etiqueta. */
+.cod {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+.prosa {
   max-width: 68ch;
 }
 
-/* --- Controle: todo controle é bloco, e todo bloco afunda ---------------- */
+/* --- Superfície ---------------------------------------------------------- */
 
-.bloco {
-  transition: transform 90ms steps(2, end);
+.carta {
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  border-radius: var(--r-g);
+  box-shadow: var(--sombra-1);
 }
 
-/* :active em vez de mouse: um balcão com leitor de código de barras é
-   teclado, e o celular é toque. Nenhum dos dois emite mousedown. */
-.bloco:active:not(:disabled) {
-  transform: translateY(3px);
-}
+/* --- Movimento ----------------------------------------------------------- */
 
-/* --- Piscar: dois quadros, como o mundo manda ----------------------------- */
-
-@keyframes blink2 {
-  0%,
-  49% {
-    opacity: 1;
-  }
-  50%,
-  100% {
+/* Entrada única e curta. Um momento autoral, não um efeito por seção. */
+@keyframes surge {
+  from {
     opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 
-.blink {
-  animation: blink2 1s steps(1, end) infinite;
+.surge {
+  animation: surge 0.4s var(--saida) both;
+}
+
+/* O pulso que marca o que ACABOU de mudar de estado no servidor. */
+@keyframes pulso {
+  0% {
+    box-shadow: 0 0 0 0 rgba(47, 87, 255, 0.45);
+  }
+  100% {
+    box-shadow: 0 0 0 14px rgba(47, 87, 255, 0);
+  }
+}
+
+.pulso {
+  animation: pulso 0.7s var(--saida);
+}
+
+.toque {
+  transition:
+    transform 0.18s var(--saida),
+    box-shadow 0.18s var(--saida),
+    background-color 0.14s ease,
+    border-color 0.14s ease;
+}
+.toque:active:not(:disabled) {
+  transform: translateY(1px) scale(0.995);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .blink {
-    animation: none;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

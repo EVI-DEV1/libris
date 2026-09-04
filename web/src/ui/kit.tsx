@@ -1,459 +1,454 @@
 import { useEffect, useRef, useState } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
-import { PixelIcon } from './PixelIcon';
-import type { IconName } from './PixelIcon';
+import { Icon } from './Icon';
+import type { IconName } from './Icon';
 
-/* ------------------------------------------------------------------ Janela */
+/* ---------------------------------------------------------------- Superfície */
 
-/**
- * O cabeçalho é tinta chapada SOB o texto e xadrez no resto da faixa.
- * O dither não pode passar por baixo de letra: pálido sobre o tom médio dá
- * 3.29:1. Ele é campo onde não há texto — é assim que o quinto tom vira
- * material de verdade sem custar legibilidade.
- */
-export function Win({
-  title,
-  icon,
-  right,
+export function Carta({
+  titulo,
+  icone,
+  direita,
   children,
-  flat,
-  grow,
+  padding = true,
   style,
 }: {
-  title?: string;
-  icon?: IconName;
-  right?: ReactNode;
+  titulo?: string;
+  icone?: IconName;
+  direita?: ReactNode;
   children: ReactNode;
-  flat?: boolean;
-  /** Faz a janela ocupar a altura que sobra, em vez de flutuar sobre o vazio. */
-  grow?: boolean;
+  padding?: boolean;
   style?: CSSProperties;
 }) {
   return (
-    <section
-      className={flat ? 'win-flat' : 'win'}
-      style={{
-        ...(grow ? { flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 } : {}),
-        ...style,
-      }}
-    >
-      {title ? (
-        <header className="win-title" style={{ background: 'var(--ink)' }}>
-          {icon ? <PixelIcon name={icon} size={14} /> : null}
-          <span>{title}</span>
-          {/* Trecho de xadrez: o terminador da faixa, sem letra nenhuma em cima. */}
-          <span
-            className="dither"
-            aria-hidden
-            style={{ flex: 1, alignSelf: 'stretch', margin: '0 calc(var(--u) * 2)', minWidth: 24 }}
-          />
-          {right}
+    <section className="carta" style={style}>
+      {titulo ? (
+        <header
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'calc(var(--u) * 2.5)',
+            padding: 'calc(var(--u) * 4) calc(var(--u) * 5)',
+            borderBottom: '1px solid var(--linha)',
+          }}
+        >
+          {icone ? (
+            <span style={{ color: 'var(--tinta-3)' }}>
+              <Icon name={icone} size={18} />
+            </span>
+          ) : null}
+          <h2 style={{ flex: 1, fontSize: 15, letterSpacing: '-0.01em' }}>{titulo}</h2>
+          {direita}
         </header>
       ) : null}
-      <div
-        style={{
-          padding: 'calc(var(--u) * 4)',
-          ...(grow ? { flex: 1, minHeight: 0, overflowY: 'auto' } : {}),
-        }}
-      >
-        {children}
-      </div>
+      <div style={padding ? { padding: 'calc(var(--u) * 5)' } : undefined}>{children}</div>
     </section>
   );
 }
 
-/* ------------------------------------------------------------------- Botão */
+/* -------------------------------------------------------------------- Botão */
 
 export function Btn({
   children,
   onClick,
-  variant = 'ghost',
-  icon,
+  variant = 'suave',
+  icone,
   disabled,
   loading,
   type = 'button',
   full,
+  size = 'md',
 }: {
   children: ReactNode;
   onClick?: () => void;
-  variant?: 'primary' | 'ghost' | 'danger';
-  icon?: IconName;
+  variant?: 'acao' | 'suave' | 'fantasma' | 'trava';
+  icone?: IconName;
   disabled?: boolean;
   loading?: boolean;
   type?: 'button' | 'submit';
   full?: boolean;
+  size?: 'sm' | 'md';
 }) {
   const off = disabled || loading;
+
   const base: CSSProperties = {
-    fontFamily: 'var(--font-chrome)',
-    fontSize: 'var(--t-chrome)',
-    letterSpacing: '0.06em',
-    textTransform: 'uppercase',
-    padding: 'calc(var(--u) * 3) calc(var(--u) * 4)',
-    border: 'var(--border) solid var(--ink)',
-    borderRadius: 'var(--radius)',
+    fontFamily: 'inherit',
+    fontSize: size === 'sm' ? 13 : 14,
+    fontWeight: 700,
+    letterSpacing: '-0.01em',
+    padding:
+      size === 'sm'
+        ? 'calc(var(--u) * 2) calc(var(--u) * 3)'
+        : 'calc(var(--u) * 2.75) calc(var(--u) * 4.5)',
+    borderRadius: 'var(--r)',
+    border: '1px solid transparent',
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 'calc(var(--u) * 2)',
     cursor: off ? 'not-allowed' : 'pointer',
     width: full ? '100%' : undefined,
+    opacity: off ? 0.5 : 1,
+    whiteSpace: 'nowrap',
   };
 
-  // Camada de bloco E camada com borrão — sombra sem desfoque é costume, não
-  // sistema de profundidade.
-  const sombra = (cor: string) => `0 3px 0 0 ${cor}, 0 5px 8px -4px rgba(15, 56, 15, 0.4)`;
-
-  const skin: CSSProperties =
-    variant === 'primary'
-      ? { background: 'var(--ink)', color: 'var(--pale)', boxShadow: sombra('var(--shade)') }
-      : variant === 'danger'
-        ? {
-            background: 'var(--pale)',
-            color: 'var(--ink)',
-            borderColor: 'var(--lamp)',
-            boxShadow: sombra('var(--lamp)'),
-          }
-        : { background: 'var(--pale)', color: 'var(--ink)', boxShadow: sombra('var(--shade)') };
+  const pele: Record<string, CSSProperties> = {
+    // A ação primária é a única superfície de cobalto cheio da tela.
+    acao: {
+      background: 'var(--acao)',
+      color: '#fff',
+      boxShadow: off ? 'none' : 'var(--sombra-acao)',
+    },
+    suave: {
+      background: 'var(--papel)',
+      color: 'var(--tinta)',
+      borderColor: 'var(--linha)',
+      boxShadow: 'var(--sombra-1)',
+    },
+    fantasma: { background: 'transparent', color: 'var(--tinta-2)' },
+    trava: { background: 'var(--trava-fraca)', color: 'var(--trava)' },
+  };
 
   return (
     <button
       type={type}
       onClick={onClick}
       disabled={off}
-      /* O afundar mora no CSS (:active), não em mousedown: leitor de código de
-         barras é teclado e celular é toque — nenhum dos dois emite mouse. */
-      className="bloco"
-      style={{ ...base, ...skin, opacity: off ? 0.45 : 1 }}
+      className="toque"
+      style={{ ...base, ...pele[variant] }}
     >
-      {loading ? (
-        <span className="blink" style={{ display: 'flex' }} aria-hidden>
-          <PixelIcon name="lampada" size={11} />
-        </span>
-      ) : icon ? (
-        <PixelIcon name={icon} size={13} />
-      ) : null}
+      {loading ? <Girando /> : icone ? <Icon name={icone} size={size === 'sm' ? 15 : 17} /> : null}
       {children}
     </button>
   );
 }
 
-/* ------------------------------------------------------------------- Campo */
+function Girando() {
+  return (
+    <span
+      aria-hidden
+      style={{
+        width: 14,
+        height: 14,
+        borderRadius: '50%',
+        border: '2px solid currentColor',
+        borderTopColor: 'transparent',
+        animation: 'girar 0.7s linear infinite',
+        display: 'block',
+      }}
+    >
+      <style>{`@keyframes girar { to { transform: rotate(360deg) } }`}</style>
+    </span>
+  );
+}
 
-export function Field({
+/* -------------------------------------------------------------------- Campo */
+
+export function Campo({
   label,
   value,
   onChange,
-  exemplo,
+  dica,
   type = 'text',
   autoFocus,
-  hint,
   id,
+  icone,
+  grande,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
-  exemplo?: string;
+  dica?: string;
   type?: string;
   autoFocus?: boolean;
-  hint?: string;
   id: string;
+  icone?: IconName;
+  grande?: boolean;
 }) {
+  const [focado, setFocado] = useState(false);
+
   return (
-    <label htmlFor={id} style={{ display: 'block' }}>
-      <span className="label" style={{ display: 'block', marginBottom: 'calc(var(--u) * 1.5)' }}>
+    <div>
+      <label
+        htmlFor={id}
+        className="rotulo"
+        style={{ display: 'block', marginBottom: 'calc(var(--u) * 2)' }}
+      >
         {label}
-      </span>
-      <input
-        id={id}
-        type={type}
-        value={value}
-        autoFocus={autoFocus}
-        onChange={(e) => onChange(e.target.value)}
-        style={{
-          width: '100%',
-          font: 'inherit',
-          fontSize: 'var(--t-corpo)',
-          color: 'var(--ink)',
-          background: 'var(--pale)',
-          border: 'var(--border) solid var(--ink)',
-          borderRadius: 'var(--radius)',
-          padding: 'calc(var(--u) * 3)',
-          caretColor: 'var(--ink)',
-        }}
-      />
-      {hint || exemplo ? (
-        <span className="dado" style={{ display: 'block', marginTop: 'calc(var(--u) * 1.5)' }}>
-          {exemplo ? (
-            <>
-              Ex.: {exemplo}
-              {hint ? ' · ' : ''}
-            </>
-          ) : null}
-          {hint}
-        </span>
+      </label>
+
+      <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+        {icone ? (
+          <span
+            style={{
+              position: 'absolute',
+              left: 'calc(var(--u) * 3.5)',
+              color: focado ? 'var(--acao)' : 'var(--tinta-3)',
+              transition: 'color 0.16s ease',
+              pointerEvents: 'none',
+            }}
+          >
+            <Icon name={icone} size={grande ? 20 : 18} />
+          </span>
+        ) : null}
+
+        <input
+          id={id}
+          type={type}
+          value={value}
+          autoFocus={autoFocus}
+          onChange={(e) => onChange(e.target.value)}
+          onFocus={() => setFocado(true)}
+          onBlur={() => setFocado(false)}
+          className="toque"
+          style={{
+            width: '100%',
+            fontFamily: grande ? 'var(--mono)' : 'inherit',
+            fontSize: grande ? 20 : 15,
+            fontWeight: grande ? 500 : 400,
+            letterSpacing: grande ? '0.02em' : undefined,
+            color: 'var(--tinta)',
+            background: 'var(--papel)',
+            border: `1px solid ${focado ? 'var(--acao)' : 'var(--linha)'}`,
+            borderRadius: 'var(--r)',
+            padding: `${grande ? 'calc(var(--u) * 3.5)' : 'calc(var(--u) * 2.75)'} calc(var(--u) * 3.5)`,
+            paddingLeft: icone ? 'calc(var(--u) * 11)' : undefined,
+            boxShadow: focado ? '0 0 0 4px rgba(47, 87, 255, 0.12)' : 'var(--sombra-1)',
+            outline: 'none',
+          }}
+        />
+      </div>
+
+      {dica ? (
+        <p className="sub" style={{ margin: 'calc(var(--u) * 2) 0 0' }}>
+          {dica}
+        </p>
       ) : null}
-    </label>
+    </div>
   );
 }
 
-/* ---------------------------------------------------------------- Contador */
+/* ----------------------------------------------------------------- Contador */
 
 /**
  * Contador de casas fixas: cada dígito mora numa célula que não se move, e a
  * troca acende a célula por um instante. O número nunca é redesenhado inteiro.
  */
-export function Counter({
+export function Contador({
   value,
-  places,
-  prefix,
-  suffix,
-  alarm,
+  casas,
+  cor,
 }: {
   value: number;
-  places?: number;
-  prefix?: string;
-  suffix?: string;
-  alarm?: boolean;
+  casas?: number;
+  cor?: string;
 }) {
-  const text = String(Math.abs(Math.trunc(value)));
-  const digits = (places ? text.padStart(places, '0') : text).split('');
-  const prev = useRef(digits);
-  const [flash, setFlash] = useState<number[]>([]);
+  const texto = String(Math.abs(Math.trunc(value)));
+  const digitos = (casas ? texto.padStart(casas, '0') : texto).split('');
+  const anterior = useRef(digitos);
+  const [aceso, setAceso] = useState<number[]>([]);
 
   useEffect(() => {
-    const changed: number[] = [];
-    digits.forEach((d, i) => {
-      if (prev.current[i] !== d) changed.push(i);
+    const mudou: number[] = [];
+    digitos.forEach((d, i) => {
+      if (anterior.current[i] !== d) mudou.push(i);
     });
-    prev.current = digits;
-    if (changed.length) {
-      setFlash(changed);
-      const t = setTimeout(() => setFlash([]), 260);
+    anterior.current = digitos;
+    if (mudou.length) {
+      setAceso(mudou);
+      const t = setTimeout(() => setAceso([]), 420);
       return () => clearTimeout(t);
     }
     return;
-  }, [digits.join('')]);
+  }, [digitos.join('')]);
 
   return (
-    <span
-      className="num"
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 2,
-        fontFamily: 'var(--font-chrome)',
-      }}
-    >
-      {prefix ? <span style={{ marginRight: 2 }}>{prefix}</span> : null}
-      {digits.map((d, i) => (
+    <span style={{ display: 'inline-flex', fontFamily: 'var(--mono)', fontWeight: 600 }}>
+      {digitos.map((d, i) => (
         <span
           key={i}
           style={{
             display: 'inline-block',
-            minWidth: '0.72em',
             textAlign: 'center',
-            padding: '1px 2px',
-            background: flash.includes(i) ? 'var(--ink)' : 'transparent',
-            color: flash.includes(i) ? 'var(--pale)' : 'inherit',
+            minWidth: '0.62em',
+            color: aceso.includes(i) ? 'var(--acao)' : (cor ?? 'inherit'),
+            transform: aceso.includes(i) ? 'translateY(-1px)' : 'none',
+            transition: 'color 0.35s var(--saida), transform 0.35s var(--saida)',
           }}
         >
           {d}
         </span>
       ))}
-      {suffix ? <span style={{ marginLeft: 3 }}>{suffix}</span> : null}
-      {alarm ? <Lamp /> : null}
     </span>
   );
 }
 
-/* ------------------------------------------------------------------ Lâmpada */
+/* --------------------------------------------------------------- Etiquetas */
 
-/** A única coisa vermelha da interface. Ponto, nunca texto. */
-export function Lamp({ label }: { label?: string }) {
-  return (
-    <span
-      style={{ display: 'inline-flex', alignItems: 'center', gap: 'calc(var(--u) * 1.5)' }}
-      title={label}
-    >
-      <span className="blink" style={{ display: 'block' }}>
-        <PixelIcon name="lampada" size={9} color="var(--lamp)" title={label} />
-      </span>
-    </span>
-  );
-}
+export type Tom = 'ok' | 'neutro' | 'espera' | 'alerta' | 'trava';
 
-/* -------------------------------------------------------------- Etiquetas */
+const TONS: Record<Tom, CSSProperties> = {
+  ok: { background: 'var(--ok-fraca)', color: 'var(--ok)' },
+  neutro: { background: 'var(--campo-2)', color: 'var(--tinta-2)' },
+  espera: { background: 'var(--acao-fraca)', color: 'var(--acao-tinta)' },
+  alerta: { background: 'var(--alerta-fraca)', color: 'var(--alerta)' },
+  trava: { background: 'var(--trava-fraca)', color: 'var(--trava)' },
+};
 
-/**
- * Estado se marca por INVERSÃO e por caixa — a cor não muda.
- * Três pesos, porque o balcão precisa distinguir os estados de relance:
- *  - `strong`   invertido: o estado que libera ação (na estante, no prazo);
- *  - padrão     contorno: o estado neutro em curso (emprestado);
- *  - `dashed`   tracejado: estado de espera, que não é ação nem alarme;
- *  - `alarm`    borda da lâmpada: o que trava o atendimento.
- */
-export function Tag({
+/** Estado se marca por campo de cor cheio, cada tom com um significado só. */
+export function Selo({
   children,
-  strong,
-  alarm,
-  dashed,
-  onDark,
+  tom = 'neutro',
+  ponto,
 }: {
   children: ReactNode;
-  strong?: boolean;
-  alarm?: boolean;
-  dashed?: boolean;
-  onDark?: boolean;
+  tom?: Tom;
+  ponto?: boolean;
 }) {
-  const tinta = onDark ? 'var(--pale)' : 'var(--ink)';
-  const fundo = onDark ? 'var(--ink)' : 'var(--pale)';
-
   return (
     <span
       style={{
-        fontFamily: 'var(--font-chrome)',
-        fontSize: 'var(--t-chrome)',
-        letterSpacing: '0.06em',
-        textTransform: 'uppercase',
-        padding: '3px 8px',
-        border: `2px ${dashed ? 'dashed' : 'solid'} ${alarm ? 'var(--lamp)' : tinta}`,
-        borderRadius: 3,
-        background: strong ? tinta : 'transparent',
-        color: strong ? fundo : tinta,
+        ...TONS[tom],
+        fontSize: 12.5,
+        fontWeight: 700,
+        letterSpacing: '-0.005em',
+        padding: 'calc(var(--u) * 1.25) calc(var(--u) * 2.5)',
+        borderRadius: 999,
         display: 'inline-flex',
         alignItems: 'center',
-        gap: 4,
+        gap: 'calc(var(--u) * 1.5)',
         whiteSpace: 'nowrap',
       }}
     >
-      {alarm ? <PixelIcon name="lampada" size={8} color="var(--lamp)" /> : null}
+      {ponto ? (
+        <span
+          style={{
+            width: 6,
+            height: 6,
+            borderRadius: '50%',
+            background: 'currentColor',
+            flex: 'none',
+          }}
+        />
+      ) : null}
       {children}
     </span>
   );
 }
 
-/* ---------------------------------------------------------------- Recados */
+/* ----------------------------------------------------------------- Recados */
 
 /**
- * A recusa é parte do atendimento: ela ganha a mesma caixa que o sucesso, e
- * mostra a frase que o SERVIDOR deu — a tela não reescreve regra de negócio.
+ * A recusa é parte do atendimento: ganha a mesma caixa que o sucesso, e mostra
+ * a frase que o SERVIDOR deu — a tela não reescreve regra de negócio.
  */
 export function Recado({
-  kind,
+  tipo,
   children,
-  onClose,
+  onFechar,
 }: {
-  kind: 'ok' | 'bloqueio' | 'aviso';
+  tipo: 'ok' | 'trava' | 'aviso';
   children: ReactNode;
-  onClose?: () => void;
+  onFechar?: () => void;
 }) {
-  const alarm = kind === 'bloqueio';
+  const skin =
+    tipo === 'ok'
+      ? { fundo: 'var(--ok-fraca)', tinta: 'var(--ok)', icone: 'check' as IconName }
+      : tipo === 'trava'
+        ? { fundo: 'var(--trava-fraca)', tinta: 'var(--trava)', icone: 'alerta' as IconName }
+        : { fundo: 'var(--alerta-fraca)', tinta: 'var(--alerta)', icone: 'alerta' as IconName };
+
   return (
     <div
-      role={alarm ? 'alert' : 'status'}
+      role={tipo === 'trava' ? 'alert' : 'status'}
+      className="surge"
       style={{
         display: 'flex',
         alignItems: 'flex-start',
         gap: 'calc(var(--u) * 3)',
-        padding: 'calc(var(--u) * 3)',
-        border: `var(--border) solid ${alarm ? 'var(--lamp)' : 'var(--ink)'}`,
-        borderRadius: 'var(--radius)',
-        background: kind === 'ok' ? 'var(--ink)' : 'var(--pale)',
-        color: kind === 'ok' ? 'var(--pale)' : 'var(--ink)',
+        padding: 'calc(var(--u) * 3.5) calc(var(--u) * 4)',
+        borderRadius: 'var(--r)',
+        background: skin.fundo,
+        color: 'var(--tinta)',
       }}
     >
-      <span style={{ paddingTop: 3 }}>
-        <PixelIcon
-          name={kind === 'ok' ? 'check' : 'alerta'}
-          size={14}
-          color={alarm ? 'var(--lamp)' : 'currentColor'}
-        />
+      <span style={{ color: skin.tinta, paddingTop: 1 }}>
+        <Icon name={skin.icone} size={19} />
       </span>
-      <div style={{ flex: 1 }}>{children}</div>
-      {onClose ? (
+      <div style={{ flex: 1, fontSize: 14.5 }}>{children}</div>
+      {onFechar ? (
         <button
-          onClick={onClose}
+          onClick={onFechar}
           aria-label="Fechar recado"
-          className="bloco"
+          className="toque"
           style={{
             background: 'transparent',
             border: 0,
             cursor: 'pointer',
-            color: 'inherit',
+            color: 'var(--tinta-3)',
             padding: 2,
             display: 'inline-flex',
+            borderRadius: 6,
           }}
         >
-          <PixelIcon name="x" size={12} />
+          <Icon name="x" size={16} />
         </button>
       ) : null}
     </div>
   );
 }
 
-/* ------------------------------------------------------------ Vazio / carga */
+/* ----------------------------------------------------------- Vazio / carga */
 
-/**
- * O vazio é um campo de xadrez com uma placa em cima — não um retângulo
- * tracejado. O texto fica na placa sólida, porque tinta sobre o tom médio dá
- * 1.83:1 e seria ilegível direto no xadrez.
- */
-export function Vazio({ children }: { children: ReactNode }) {
+export function Vazio({ children, icone = 'acervo' }: { children: ReactNode; icone?: IconName }) {
   return (
     <div
-      className="dither-fine"
       style={{
-        padding: 'calc(var(--u) * 8) calc(var(--u) * 4)',
-        borderRadius: 'var(--radius)',
-        border: '2px solid var(--shade)',
+        padding: 'calc(var(--u) * 12) calc(var(--u) * 5)',
+        textAlign: 'center',
         display: 'grid',
         placeItems: 'center',
+        gap: 'calc(var(--u) * 3)',
       }}
     >
-      <p
-        className="label"
+      <span
         style={{
-          margin: 0,
-          background: 'var(--pale)',
-          border: '2px solid var(--ink)',
-          borderRadius: 4,
-          padding: 'calc(var(--u) * 2) calc(var(--u) * 3)',
-          textAlign: 'center',
+          width: 52,
+          height: 52,
+          borderRadius: 'var(--r-g)',
+          background: 'var(--campo-2)',
+          color: 'var(--tinta-3)',
+          display: 'grid',
+          placeItems: 'center',
         }}
       >
+        <Icon name={icone} size={24} />
+      </span>
+      <p className="sub" style={{ margin: 0, maxWidth: '34ch' }}>
         {children}
       </p>
     </div>
   );
 }
 
-export function Carregando({ children = 'Carregando' }: { children?: ReactNode }) {
+/** Esqueleto: o formato da resposta antes dela chegar, para a tela não pular. */
+export function Carregando({ linhas = 3 }: { linhas?: number }) {
   return (
-    <p
-      className="label"
-      style={{
-        padding: 'calc(var(--u) * 6)',
-        textAlign: 'center',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 'calc(var(--u) * 2)',
-      }}
-    >
-      {children}
-      <span className="blink" style={{ display: 'flex' }} aria-hidden>
-        <PixelIcon name="lampada" size={10} />
-      </span>
-    </p>
-  );
-}
-
-/** A seta que sempre marca qual é o próximo passo. */
-export function Proximo() {
-  return (
-    <span className="blink" style={{ display: 'inline-flex' }}>
-      <PixelIcon name="seta" size={12} />
-    </span>
+    <div style={{ display: 'grid', gap: 'calc(var(--u) * 2)' }} aria-busy="true" aria-live="polite">
+      {Array.from({ length: linhas }).map((_, i) => (
+        <div
+          key={i}
+          style={{
+            height: 56,
+            borderRadius: 'var(--r)',
+            background:
+              'linear-gradient(90deg, var(--campo-2) 25%, var(--campo) 37%, var(--campo-2) 63%)',
+            backgroundSize: '400% 100%',
+            animation: 'desliza 1.3s ease infinite',
+          }}
+        />
+      ))}
+      <style>{`@keyframes desliza { 0% { background-position: 100% 50% } 100% { background-position: 0 50% } }`}</style>
+    </div>
   );
 }
