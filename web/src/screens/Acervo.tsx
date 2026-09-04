@@ -33,9 +33,17 @@ export function Acervo() {
   }, [busca, soDisponiveis]);
 
   return (
-    <div style={{ display: 'grid', gap: 'calc(var(--u) * 4)', maxWidth: 1100 }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 'calc(var(--u) * 4)',
+        maxWidth: 1100,
+        width: '100%',
+      }}
+    >
       <div className="win" style={{ padding: 'calc(var(--u) * 4)' }}>
-        <div style={{ display: 'flex', gap: 'calc(var(--u) * 3)', alignItems: 'flex-end', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 'calc(var(--u) * 3)', alignItems: 'center', flexWrap: 'wrap' }}>
           <div style={{ flex: '1 1 280px' }}>
             <Field
               id="acervo-busca"
@@ -59,6 +67,7 @@ export function Acervo() {
       {erro ? <Recado kind="bloqueio">{erro}</Recado> : null}
 
       <Win
+        grow
         title="Acervo"
         icon="acervo"
         right={
@@ -94,7 +103,7 @@ export function Acervo() {
               >
                 <span style={{ minWidth: 0 }}>
                   <strong style={{ display: 'block' }}>{b.title}</strong>
-                  <span className="label">
+                  <span className="dado">
                     {b.authors.map((a) => a.name).join(', ')}
                     {b.publishedYear ? ` · ${b.publishedYear}` : ''}
                     {b.category ? ` · ${b.category.name}` : ''}
@@ -118,7 +127,7 @@ function Disponibilidade({ livre, total }: { livre: number; total: number }) {
       <Tag strong={livre > 0} alarm={livre === 0}>
         {livre > 0 ? 'na estante' : 'tudo fora'}
       </Tag>
-      <span className="label num">
+      <span className="dado num">
         <Counter value={livre} /> de <Counter value={total} />
       </span>
     </span>
@@ -159,7 +168,7 @@ function FichaDaObra({ id, onFechar }: { id: string; onFechar: () => void }) {
         <Carregando />
       ) : (
         <div style={{ display: 'grid', gap: 'calc(var(--u) * 4)' }}>
-          <p className="label" style={{ margin: 0 }}>
+          <p className="dado" style={{ margin: 0 }}>
             {livro.authors.map((a) => a.name).join(', ')} · ISBN {livro.isbn}
             {livro.publisher ? ` · ${livro.publisher}` : ''}
           </p>
@@ -181,7 +190,7 @@ function FichaDaObra({ id, onFechar }: { id: string; onFechar: () => void }) {
                   }}
                 >
                   <strong style={{ fontFamily: 'var(--font-chrome)', fontSize: 12 }}>{c.code}</strong>
-                  <span className="label" style={{ flex: 1 }}>
+                  <span className="dado" style={{ flex: 1 }}>
                     {c.shelf ? `estante ${c.shelf}` : 'sem estante'}
                   </span>
                   <SituacaoTag status={c.status} />

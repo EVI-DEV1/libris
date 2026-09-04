@@ -54,7 +54,15 @@ export function Emprestimos() {
   }
 
   return (
-    <div style={{ display: 'grid', gap: 'calc(var(--u) * 4)', maxWidth: 1100 }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 'calc(var(--u) * 4)',
+        maxWidth: 1100,
+        width: '100%',
+      }}
+    >
       <div
         className="win"
         style={{ padding: 'calc(var(--u) * 3)', display: 'flex', gap: 'calc(var(--u) * 2)', flexWrap: 'wrap' }}
@@ -77,8 +85,9 @@ export function Emprestimos() {
       ) : null}
 
       <Win
+        grow
         title={filtro === 'overdue' ? 'Em atraso' : filtro === 'ACTIVE' ? 'Em curso' : 'Devolvidos'}
-        icon="devolver"
+        icon="pilha"
         right={
           loans ? (
             <span className="label" style={{ color: 'var(--pale)', opacity: 1 }}>
@@ -132,7 +141,7 @@ function Linha({ loan, onDevolver }: { loan: Loan; onDevolver: () => void }) {
           </strong>
           {loan.isOverdue ? <Lamp label="Em atraso" /> : null}
         </div>
-        <div className="label" style={{ marginTop: 4, display: 'flex', gap: 'calc(var(--u) * 3)', flexWrap: 'wrap' }}>
+        <div className="dado" style={{ marginTop: 4, display: 'flex', gap: 'calc(var(--u) * 3)', flexWrap: 'wrap' }}>
           <span>{loan.user.name}</span>
           <span className="num">
             {devolvido ? 'devolvido' : 'volta'} em {dia(loan.returnedAt ?? loan.dueAt)}

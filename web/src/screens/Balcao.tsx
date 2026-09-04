@@ -68,14 +68,24 @@ export function Balcao({ operador }: { operador: User }) {
   }
 
   return (
-    <div style={{ display: 'grid', gap: 'calc(var(--u) * 4)', maxWidth: 1100 }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 'calc(var(--u) * 4)',
+        maxWidth: 1100,
+        width: '100%',
+      }}
+    >
       {/* ---- Caixa de comando: o cursor piscando é o começo de tudo ---- */}
       <form onSubmit={procurar} className="win" style={{ padding: 'calc(var(--u) * 4)' }}>
         <div
           style={{
             display: 'flex',
             gap: 'calc(var(--u) * 3)',
-            alignItems: 'flex-end',
+            // 'center' e nao 'flex-end': a dica embaixo do campo empurrava o
+            // botao 30px abaixo do input a que ele pertence.
+            alignItems: 'center',
             flexWrap: 'wrap',
           }}
         >
@@ -184,7 +194,7 @@ function FichaDoExemplar({
       <div style={{ display: 'grid', gap: 'calc(var(--u) * 4)' }}>
         <div>
           <h2 style={{ marginBottom: 'calc(var(--u) * 1)' }}>{exemplar.book?.title}</h2>
-          <p className="label" style={{ margin: 0 }}>
+          <p className="dado" style={{ margin: 0 }}>
             ISBN {exemplar.book?.isbn}
             {exemplar.shelf ? ` · estante ${exemplar.shelf}` : ''}
           </p>
@@ -340,7 +350,7 @@ function Emprestar({
           <PixelIcon name="check" size={14} />
           <div style={{ flex: 1 }}>
             <strong>{leitor.name}</strong>
-            <span className="label" style={{ display: 'block', color: 'var(--mid)', opacity: 1 }}>
+            <span className="dado" style={{ display: 'block', color: 'var(--mid)' }}>
               {leitor.email}
             </span>
           </div>
@@ -387,7 +397,7 @@ function Emprestar({
                   }}
                 >
                   <span style={{ flex: 1 }}>{u.name}</span>
-                  <span className="label">{u.email}</span>
+                  <span className="dado">{u.email}</span>
                   <Proximo />
                 </button>
               ))}
@@ -406,7 +416,7 @@ function Emprestar({
         Emprestar em nome de {leitor ? leitor.name.split(' ')[0] : '…'}
       </Btn>
 
-      <p className="label" style={{ margin: 0 }}>
+      <p className="dado" style={{ margin: 0 }}>
         Registrado por {operador.name}.
       </p>
     </div>
@@ -492,7 +502,7 @@ function OCampo({ versao }: { versao: number }) {
   }, [versao]);
 
   return (
-    <Win title="Fora da estante agora" icon="devolver">
+    <Win title="Fora da estante agora" icon="pilha" grow>
       {loans === null ? (
         <Carregando />
       ) : loans.length === 0 ? (
@@ -523,11 +533,11 @@ function OCampo({ versao }: { versao: number }) {
                 </strong>
                 <span style={{ flex: '1 1 180px', minWidth: 0, overflow: 'hidden' }}>
                   {l.copy.book.title}
-                  <span className="label" style={{ marginLeft: 8 }}>
+                  <span className="dado" style={{ marginLeft: 8 }}>
                     {l.user.name}
                   </span>
                 </span>
-                <span className="num label">{dia(l.dueAt)}</span>
+                <span className="num dado">{dia(l.dueAt)}</span>
                 {l.isOverdue ? (
                   <Tag alarm>
                     <Counter value={l.daysLate} places={2} /> dias
@@ -546,16 +556,21 @@ function OCampo({ versao }: { versao: number }) {
 /* ------------------------------------------------------------------ util -- */
 
 export function SituacaoTag({ status, onDark }: { status: Copy['status']; onDark?: boolean }) {
-  const mapa: Record<Copy['status'], { texto: string; strong?: boolean; alarm?: boolean }> = {
+  // Quatro pesos, nao quatro palavras: invertido libera acao, contorno esta
+  // em curso, tracejado espera, lampada trava o atendimento.
+  const mapa: Record<
+    Copy['status'],
+    { texto: string; strong?: boolean; alarm?: boolean; dashed?: boolean }
+  > = {
     AVAILABLE: { texto: 'na estante', strong: true },
     ON_LOAN: { texto: 'emprestado' },
-    RESERVED: { texto: 'separado' },
+    RESERVED: { texto: 'separado', dashed: true },
     MAINTENANCE: { texto: 'manutenção', alarm: true },
     LOST: { texto: 'perdido', alarm: true },
   };
   const m = mapa[status];
   return (
-    <Tag strong={m.strong} alarm={m.alarm} onDark={onDark}>
+    <Tag strong={m.strong} alarm={m.alarm} dashed={m.dashed} onDark={onDark}>
       {m.texto}
     </Tag>
   );

@@ -54,7 +54,15 @@ export function Reservas() {
   }
 
   return (
-    <div style={{ display: 'grid', gap: 'calc(var(--u) * 4)', maxWidth: 1100 }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 'calc(var(--u) * 4)',
+        maxWidth: 1100,
+        width: '100%',
+      }}
+    >
       <div
         className="win"
         style={{
@@ -84,6 +92,7 @@ export function Reservas() {
       ) : null}
 
       <Win
+        grow
         title={filtro === 'READY' ? 'Esperando retirada' : 'Fila de espera'}
         icon="reserva"
         right={
@@ -137,7 +146,7 @@ export function Reservas() {
                     <strong style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                       {r.book.title}
                     </strong>
-                    <span className="label">{r.user.name}</span>
+                    <span className="dado">{r.user.name}</span>
                   </span>
 
                   {r.expiresAt ? (

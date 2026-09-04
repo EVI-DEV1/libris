@@ -85,10 +85,7 @@ export function Login({ onEntrar }: { onEntrar: (u: User) => void }) {
           </div>
         </form>
 
-        <p
-          className="label"
-          style={{ marginTop: 'calc(var(--u) * 4)', textAlign: 'center' }}
-        >
+        <p className="dado" style={{ marginTop: 'calc(var(--u) * 4)', textAlign: 'center' }}>
           Dados de demonstração · balcao@biblioteca.dev · admin12345
         </p>
       </div>
