@@ -59,16 +59,14 @@ export function Login({ porta, onEntrar }: { porta: Porta; onEntrar: (u: User) =
           <span className={`entrada-selo ${direcao ? 'selo-direcao' : ''}`} aria-hidden>
             <Icon name={direcao ? 'chave' : 'acervo'} size={26} />
           </span>
-          {direcao ? (
-            <span className="marcador">Acesso restrito</span>
-          ) : null}
+
         </div>
 
         <div>
           <h1 style={{ fontSize: 28 }}>{direcao ? 'Direção' : brand.name}</h1>
           <p className="sub" style={{ margin: 'calc(var(--u) * 1) 0 0', fontSize: 15 }}>
             {direcao
-              ? `Administração do ${brand.name}: acervo, estoque e pessoas.`
+              ? `Acesso restrito à administração do ${brand.name}: acervo, estoque e pessoas.`
               : brand.tagline}
           </p>
         </div>
@@ -167,13 +165,6 @@ export function Login({ porta, onEntrar }: { porta: Porta; onEntrar: (u: User) =
           background-color: var(--g-b-forte);
           box-shadow: 0 2px 4px rgba(203, 48, 102, 0.22),
                       0 12px 28px -8px rgba(203, 48, 102, 0.45);
-        }
-        .marcador {
-          font-size: 12px; font-weight: 800; letter-spacing: 0.06em;
-          text-transform: uppercase;
-          color: var(--vinho-tinta); background: var(--vinho-fraca);
-          padding: calc(var(--u) * 1.25) calc(var(--u) * 2.5);
-          border-radius: 999px;
         }
         .pe {
           display: grid; gap: calc(var(--u) * 3); justify-items: center;

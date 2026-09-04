@@ -7,3 +7,9 @@ coverage/
 
 # Evidencia da revisao de acabamento (processo, nao produto)
 .impeccable/review/
+
+prisma/schema.prod.prisma
+.vercel
+
+.vercel
+.env*

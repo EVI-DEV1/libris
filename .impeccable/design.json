@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-04T00:00:00.000Z",
+  "title": "Design System: Libris",
+  "extensions": {
+    "colorMeta": {
+      "tinta": { "role": "neutral", "displayName": "Tinta", "canonical": "#0d1526", "tonalRamp": ["#05080e", "#0d1526", "#1b2740", "#2f394c", "#4a5568", "#616c84", "#9aa5b8", "#e6ebf4"] },
+      "tinta-2": { "role": "neutral", "displayName": "Tinta Secundária", "canonical": "#4a5568", "tonalRamp": ["#141a22", "#232b38", "#333d4e", "#4a5568", "#616c84", "#8792a6", "#b6bfcf", "#e6ebf4"] },
+      "tinta-3": { "role": "neutral", "displayName": "Tinta Terciária", "canonical": "#616c84", "tonalRamp": ["#171b23", "#252c39", "#39424f", "#4d5768", "#616c84", "#8b95a9", "#b4bccb", "#e3e8f0"] },
+      "tinta-campo": { "role": "neutral", "displayName": "Tinta de Campo", "canonical": "#2f394c", "tonalRamp": ["#0b0e13", "#161b24", "#222936", "#2f394c", "#455165", "#67738a", "#9aa4b6", "#dde2ea"] },
+      "papel": { "role": "neutral", "displayName": "Papel", "canonical": "#ffffff", "tonalRamp": ["#1c1f24", "#3a3f47", "#5b616b", "#828892", "#adb3bb", "#d3d7dd", "#eef0f3", "#ffffff"] },
+      "campo": { "role": "neutral", "displayName": "Campo Neutro", "canonical": "#f4f7fb", "tonalRamp": ["#1a1e25", "#333a45", "#4f5764", "#6f7885", "#98a1ad", "#c2c9d3", "#e2e7ee", "#f4f7fb"] },
+      "campo-2": { "role": "neutral", "displayName": "Campo Neutro 2", "canonical": "#e6ebf4", "tonalRamp": ["#171b22", "#2c3340", "#454e5e", "#61697b", "#858d9e", "#aeb6c4", "#cfd6e1", "#e6ebf4"] },
+      "linha": { "role": "neutral", "displayName": "Linha", "canonical": "#dbe2ee", "tonalRamp": ["#161a21", "#2a313d", "#41495a", "#5c6579", "#818b9e", "#a9b3c4", "#c6cede", "#dbe2ee"] },
+      "campo-a": { "role": "tertiary", "displayName": "Campo Claro", "canonical": "#8fe0fe", "tonalRamp": ["#062a38", "#0a4457", "#0f6079", "#157e9c", "#2fa2c2", "#5ec3e2", "#8fe0fe", "#d3f3ff"] },
+      "campo-b": { "role": "tertiary", "displayName": "Campo Rosa", "canonical": "#e69cb6", "tonalRamp": ["#340715", "#4f1024", "#6d1c36", "#8d2c4b", "#ac4b66", "#c86e88", "#e69cb6", "#f6d5e0"] },
+      "g-a": { "role": "primary", "displayName": "Ciano Transfile", "canonical": "#16bffd", "tonalRamp": ["#02222f", "#043a4e", "#07566f", "#0a7492", "#0f97bd", "#16bffd", "#66d6fe", "#c2eeff"] },
+      "g-a-forte": { "role": "primary", "displayName": "Ciano Forte", "canonical": "#0f7ea7", "tonalRamp": ["#021b25", "#042c3b", "#065070", "#0b6a8e", "#0f7ea7", "#2aa2ce", "#68c6e6", "#c3e9f7"] },
+      "g-b": { "role": "primary", "displayName": "Vinho Transfile", "canonical": "#cb3066", "tonalRamp": ["#2a0714", "#460c22", "#651231", "#8b1a43", "#ab2455", "#cb3066", "#e0688f", "#f6c8d8"] },
+      "g-b-forte": { "role": "primary", "displayName": "Vinho Transfile (cru)", "canonical": "#cb3066", "tonalRamp": ["#2a0714", "#460c22", "#651231", "#8b1a43", "#ab2455", "#cb3066", "#e0688f", "#f6c8d8"] },
+      "acao": { "role": "primary", "displayName": "Ação Sólida", "canonical": "#0e769d", "tonalRamp": ["#02191f", "#042936", "#06455c", "#0b607f", "#0e769d", "#2599c1", "#63c0de", "#c0e6f4"] },
+      "acao-escura": { "role": "primary", "displayName": "Ação Escura", "canonical": "#0b607f", "tonalRamp": ["#01141b", "#03222d", "#053a4c", "#0b607f", "#0e769d", "#2599c1", "#63c0de", "#c0e6f4"] },
+      "acao-fraca": { "role": "secondary", "displayName": "Ciano Diluído", "canonical": "#e8f9ff", "tonalRamp": ["#04222d", "#073949", "#0b566c", "#12798f", "#3ba3b8", "#7fcbdb", "#bce8f5", "#e8f9ff"] },
+      "acao-tinta": { "role": "secondary", "displayName": "Tinta de Ação", "canonical": "#0e769d", "tonalRamp": ["#02191f", "#042936", "#06455c", "#0b607f", "#0e769d", "#2599c1", "#63c0de", "#c0e6f4"] },
+      "vinho-fraca": { "role": "secondary", "displayName": "Vinho Diluído", "canonical": "#faeaf0", "tonalRamp": ["#2a0714", "#460c22", "#651231", "#8b1a43", "#b4506e", "#d68ba3", "#eec3d2", "#faeaf0"] },
+      "vinho-tinta": { "role": "secondary", "displayName": "Tinta Vinho", "canonical": "#7e1e3f", "tonalRamp": ["#22060f", "#3b0b1c", "#57132a", "#7e1e3f", "#a63456", "#c66179", "#e09fae", "#f6dbe2"] },
+      "ok": { "role": "tertiary", "displayName": "Sinal OK", "canonical": "#0f7b52", "tonalRamp": ["#031a11", "#062c1d", "#09492f", "#0f7b52", "#199a69", "#3fbc8b", "#84d8b5", "#e7f6ef"] },
+      "ok-fraca": { "role": "tertiary", "displayName": "OK Diluído", "canonical": "#e7f6ef", "tonalRamp": ["#031a11", "#062c1d", "#09492f", "#0f7b52", "#3fbc8b", "#84d8b5", "#c2ebd9", "#e7f6ef"] },
+      "alerta": { "role": "tertiary", "displayName": "Sinal Alerta", "canonical": "#b45309", "tonalRamp": ["#251003", "#3d1c04", "#5d2c05", "#8a4007", "#b45309", "#dc7c26", "#eeae72", "#fef3e2"] },
+      "alerta-fraca": { "role": "tertiary", "displayName": "Alerta Diluído", "canonical": "#fef3e2", "tonalRamp": ["#251003", "#3d1c04", "#5d2c05", "#8a4007", "#b45309", "#dc7c26", "#f2cfa4", "#fef3e2"] },
+      "trava": { "role": "tertiary", "displayName": "Sinal Trava", "canonical": "#c02638", "tonalRamp": ["#280409", "#420812", "#63101d", "#8d1a2a", "#c02638", "#d95a68", "#eb9aa4", "#fdeef0"] },
+      "trava-fraca": { "role": "tertiary", "displayName": "Trava Diluída", "canonical": "#fdeef0", "tonalRamp": ["#280409", "#420812", "#63101d", "#8d1a2a", "#c02638", "#d95a68", "#f3c4cb", "#fdeef0"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Título da tarefa aberta e da caixa de entrada. Um por tela." },
+      "headline": { "displayName": "Headline", "purpose": "Título da ficha do exemplar e cabeçalho de seção maior." },
+      "title": { "displayName": "Title", "purpose": "Cabeçalho de carta, ao lado do ícone de 18px." },
+      "body": { "displayName": "Body", "purpose": "Texto corrido; prosa limitada a 68ch." },
+      "body-sub": { "displayName": "Body Sub", "purpose": "Dado secundário: nome do leitor, data, dica de campo." },
+      "label": { "displayName": "Rótulo", "purpose": "Caixa alta espaçada que nomeia o campo ao lado. Nunca carrega dado." },
+      "codigo": { "displayName": "Código", "purpose": "Tombo, ISBN, data em coluna. Mono tabular." },
+      "comando": { "displayName": "Comando", "purpose": "O campo de leitura de tombo, a peça principal do balcão." }
+    },
+    "shadows": [
+      { "name": "sombra-1", "value": "0 1px 2px rgba(13, 21, 38, 0.06), 0 1px 3px rgba(13, 21, 38, 0.04)", "purpose": "Repouso: toda carta, campo e botão suave." },
+      { "name": "sombra-2", "value": "0 2px 4px rgba(13, 21, 38, 0.05), 0 8px 20px -6px rgba(13, 21, 38, 0.12)", "purpose": "Peça principal: a caixa de comando do balcão." },
+      { "name": "sombra-3", "value": "0 4px 8px rgba(13, 21, 38, 0.06), 0 20px 40px -12px rgba(13, 21, 38, 0.2)", "purpose": "Flutuante: caixas de entrada isoladas no campo." },
+      { "name": "sombra-acao", "value": "0 2px 4px rgba(15, 126, 167, 0.22), 0 12px 28px -8px rgba(203, 48, 102, 0.45)", "purpose": "Sombra colorida das duas pontas; só sob gradiente forte." },
+      { "name": "foco-campo", "value": "0 0 0 4px rgba(22, 191, 253, 0.2)", "purpose": "Anel do campo focado, no lugar da sombra de repouso." },
+      { "name": "barra-ativo", "value": "inset 3px 0 0 #0f7ea7", "purpose": "Borda de ataque do item ativo do trilho; vira inset 0 -3px 0 abaixo de 980px." }
+    ],
+    "motion": [
+      { "name": "saida", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Curva única do sistema: saída exponencial, rápida e assentando devagar." },
+      { "name": "surge", "value": "surge 0.4s cubic-bezier(0.16, 1, 0.3, 1) both", "purpose": "Entrada de tela e de recado: 8px de subida com fade." },
+      { "name": "pulso", "value": "pulso 0.7s cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Halo ciano de 14px, uma vez, no que acabou de mudar de estado no servidor." },
+      { "name": "toque", "value": "transform 0.18s, box-shadow 0.18s, background-color 0.14s, border-color 0.14s", "purpose": "Resposta ao clique em tudo que é clicável; :active afunda 1px e encolhe 0.5%." },
+      { "name": "desliza", "value": "desliza 1.3s ease infinite", "purpose": "Esqueleto de carregamento, gradiente varrendo 400% de largura." }
+    ],
+    "breakpoints": [
+      { "name": "compacto", "value": "980px" }
+    ],
+    "gradients": [
+      { "name": "fundo", "value": "linear-gradient(145deg, #8fe0fe 0%, #bbbeda 48%, #e69cb6 100%)", "purpose": "O campo da página inteiro, fixo. Transfile diluído em 52% de branco." },
+      { "name": "gradiente", "value": "linear-gradient(115deg, #16bffd, #cb3066)", "purpose": "Transfile cru: só superfície sem texto por cima." },
+      { "name": "gradiente-forte", "value": "linear-gradient(115deg, #0f7ea7, #cb3066)", "purpose": "Peças de marca e ação primária; branco por cima passa em 4.60:1." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botão de Ação",
+      "kind": "button",
+      "refersTo": "btn-acao",
+      "description": "A ação primária: a única superfície de gradiente cheio da tela, no máximo uma por bloco.",
+      "html": "<button class=\"ds-btn-acao\"><svg class=\"ds-ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" width=\"17\" height=\"17\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"6.5\"/><path d=\"m20 20-4.2-4.2\"/></svg>Buscar</button>",
+      "css": ".ds-btn-acao { font-family: var(--sans, 'Manrope', system-ui, sans-serif); font-size: 14px; font-weight: 700; letter-spacing: -0.01em; padding: 11px 18px; border-radius: var(--r, 10px); border: 1px solid transparent; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; white-space: nowrap; background-image: var(--gradiente-forte, linear-gradient(115deg, #0f7ea7, #cb3066)); color: #fff; box-shadow: var(--sombra-acao, 0 2px 4px rgba(15,126,167,.22), 0 12px 28px -8px rgba(203,48,102,.45)); transition: transform .18s cubic-bezier(.16,1,.3,1), box-shadow .18s cubic-bezier(.16,1,.3,1); } .ds-btn-acao:hover { transform: translateY(-1px); } .ds-btn-acao:focus-visible { outline: 2px solid var(--acao, #0e769d); outline-offset: 2px; } .ds-btn-acao:active { transform: translateY(1px) scale(.995); } .ds-btn-acao:disabled { opacity: .5; box-shadow: none; cursor: not-allowed; }"
+    },
+    {
+      "name": "Botão Suave",
+      "kind": "button",
+      "refersTo": "btn-suave",
+      "description": "O padrão para ação secundária: papel com borda e sombra de repouso.",
+      "html": "<button class=\"ds-btn-suave\"><svg class=\"ds-ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" width=\"17\" height=\"17\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"8.5\"/><path d=\"M12 7.5V12l3 2\"/></svg>Renovar prazo</button>",
+      "css": ".ds-btn-suave { font-family: var(--sans, 'Manrope', system-ui, sans-serif); font-size: 14px; font-weight: 700; letter-spacing: -0.01em; padding: 11px 18px; border-radius: var(--r, 10px); display: inline-flex; align-items: center; gap: 8px; cursor: pointer; white-space: nowrap; background: var(--papel, #fff); color: var(--tinta, #0d1526); border: 1px solid var(--linha, #dbe2ee); box-shadow: var(--sombra-1, 0 1px 2px rgba(13,21,38,.06), 0 1px 3px rgba(13,21,38,.04)); transition: transform .18s cubic-bezier(.16,1,.3,1), background-color .14s ease, border-color .14s ease; } .ds-btn-suave:hover { border-color: var(--acao, #0e769d); } .ds-btn-suave:focus-visible { outline: 2px solid var(--acao, #0e769d); outline-offset: 2px; } .ds-btn-suave:active { transform: translateY(1px) scale(.995); }"
+    },
+    {
+      "name": "Botão Fantasma",
+      "kind": "button",
+      "refersTo": "btn-fantasma",
+      "description": "Para limpar, cancelar, voltar: sem superfície, sem borda.",
+      "html": "<button class=\"ds-btn-fantasma\">Limpar</button>",
+      "css": ".ds-btn-fantasma { font-family: var(--sans, 'Manrope', system-ui, sans-serif); font-size: 14px; font-weight: 700; letter-spacing: -0.01em; padding: 11px 18px; border-radius: var(--r, 10px); border: 1px solid transparent; background: transparent; color: var(--tinta-2, #4a5568); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: background-color .14s ease, color .14s ease; } .ds-btn-fantasma:hover { background: var(--campo, #f4f7fb); color: var(--tinta, #0d1526); } .ds-btn-fantasma:focus-visible { outline: 2px solid var(--acao, #0e769d); outline-offset: 2px; }"
+    },
+    {
+      "name": "Campo de Comando",
+      "kind": "input",
+      "refersTo": "campo-grande",
+      "description": "A peça principal do balcão: leitura de tombo em mono de 20px, com rótulo em caixa alta e dica abaixo.",
+      "html": "<div class=\"ds-campo-grande\"><label for=\"ds-tombo\">Código de tombo</label><div class=\"ds-campo-linha\"><span class=\"ds-campo-ico\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" width=\"20\" height=\"20\" aria-hidden=\"true\"><path d=\"M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2\"/><path d=\"M4 12h16\"/></svg></span><input id=\"ds-tombo\" value=\"0884-001\" /></div><p class=\"ds-dica\">Digite ou passe o leitor de código de barras. Ex.: 0884-001</p></div>",
+      "css": ".ds-campo-grande label { display: block; margin-bottom: 8px; font-family: var(--sans, 'Manrope', system-ui, sans-serif); font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--tinta-3, #616c84); } .ds-campo-linha { position: relative; display: flex; align-items: center; } .ds-campo-ico { position: absolute; left: 14px; color: var(--tinta-3, #616c84); pointer-events: none; transition: color .16s ease; display: inline-flex; } .ds-campo-grande input { width: 100%; font-family: var(--mono, 'JetBrains Mono', ui-monospace, monospace); font-size: 20px; font-weight: 500; letter-spacing: .02em; color: var(--tinta, #0d1526); background: var(--papel, #fff); border: 1px solid var(--linha, #dbe2ee); border-radius: var(--r, 10px); padding: 14px 14px 14px 44px; box-shadow: var(--sombra-1, 0 1px 2px rgba(13,21,38,.06)); outline: none; transition: border-color .14s ease, box-shadow .18s cubic-bezier(.16,1,.3,1); } .ds-campo-grande input:focus { border-color: var(--acao, #0e769d); box-shadow: 0 0 0 4px rgba(22,191,253,.2); } .ds-campo-linha:focus-within .ds-campo-ico { color: var(--acao, #0e769d); } .ds-dica { margin: 8px 0 0; font-family: var(--sans, 'Manrope', system-ui, sans-serif); font-size: 13.5px; color: var(--tinta-2, #4a5568); }"
+    },
+    {
+      "name": "Carta",
+      "kind": "card",
+      "refersTo": "carta",
+      "description": "A superfície branca que flutua sobre o campo colorido, com cabeçalho de ícone, título e área à direita.",
+      "html": "<section class=\"ds-carta\"><header><span class=\"ds-carta-ico\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" width=\"18\" height=\"18\" aria-hidden=\"true\"><path d=\"M12 3 3 7.5l9 4.5 9-4.5z\"/><path d=\"m3 12.5 9 4.5 9-4.5\"/><path d=\"m3 17 9 4.5L21 17\"/></svg></span><h2>Fora da estante agora</h2><span class=\"ds-selo ds-selo-neutro\">8 exemplares</span></header><div class=\"ds-carta-corpo\">Conteúdo da carta.</div></section>",
+      "css": ".ds-carta { background: var(--papel, #fff); border: 1px solid var(--linha, #dbe2ee); border-radius: var(--r-g, 16px); box-shadow: var(--sombra-1, 0 1px 2px rgba(13,21,38,.06), 0 1px 3px rgba(13,21,38,.04)); font-family: var(--sans, 'Manrope', system-ui, sans-serif); color: var(--tinta, #0d1526); } .ds-carta header { display: flex; align-items: center; gap: 10px; padding: 16px 20px; border-bottom: 1px solid var(--linha, #dbe2ee); } .ds-carta-ico { color: var(--tinta-3, #616c84); display: inline-flex; } .ds-carta h2 { flex: 1; margin: 0; font-size: 15px; font-weight: 800; letter-spacing: -0.01em; } .ds-carta-corpo { padding: 20px; font-size: 15px; line-height: 1.55; } .ds-selo { font-size: 12.5px; font-weight: 700; padding: 5px 10px; border-radius: 999px; white-space: nowrap; } .ds-selo-neutro { background: var(--campo-2, #e6ebf4); color: var(--tinta-2, #4a5568); }"
+    },
+    {
+      "name": "Selo de Estado",
+      "kind": "chip",
+      "refersTo": "selo-ok",
+      "description": "A etiqueta de estado do exemplar: pílula de tom fraco com tinta forte e ponto opcional. Cinco tons, cada um com um significado só.",
+      "html": "<span class=\"ds-selo ds-selo-ok\"><i class=\"ds-ponto\"></i>na estante</span> <span class=\"ds-selo ds-selo-espera\"><i class=\"ds-ponto\"></i>separado</span> <span class=\"ds-selo ds-selo-alerta\"><i class=\"ds-ponto\"></i>em manutenção</span> <span class=\"ds-selo ds-selo-trava\"><i class=\"ds-ponto\"></i>perdido</span>",
+      "css": ".ds-selo { font-family: var(--sans, 'Manrope', system-ui, sans-serif); font-size: 12.5px; font-weight: 700; letter-spacing: -0.005em; padding: 5px 10px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; } .ds-ponto { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex: none; display: block; } .ds-selo-ok { background: var(--ok-fraca, #e7f6ef); color: var(--ok, #0f7b52); } .ds-selo-espera { background: var(--acao-fraca, #e8f9ff); color: var(--acao-tinta, #0e769d); } .ds-selo-alerta { background: var(--alerta-fraca, #fef3e2); color: var(--alerta, #b45309); } .ds-selo-trava { background: var(--trava-fraca, #fdeef0); color: var(--trava, #c02638); }"
+    },
+    {
+      "name": "Trilho",
+      "kind": "nav",
+      "refersTo": "item-trilho",
+      "description": "A navegação das áreas do papel: marca em gradiente forte no alto, item ativo em região de ciano diluído com barra sólida na borda de ataque.",
+      "html": "<nav class=\"ds-trilho\"><div class=\"ds-marca\"><span class=\"ds-marca-selo\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" width=\"19\" height=\"19\" aria-hidden=\"true\"><path d=\"M5 5.5A1.5 1.5 0 0 1 6.5 4H9v16H6.5A1.5 1.5 0 0 1 5 18.5z\"/><path d=\"M9 4h3.5A1.5 1.5 0 0 1 14 5.5v13a1.5 1.5 0 0 1-1.5 1.5H9z\"/><path d=\"m16.2 5.6 2.4-.6a1 1 0 0 1 1.2.7l2.1 12.1\"/></svg></span><span><strong>Libris</strong><span class=\"ds-sub\">Gestão de biblioteca</span></span></div><button class=\"ds-item ds-item-ativo\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" width=\"18\" height=\"18\" aria-hidden=\"true\"><path d=\"M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2\"/><path d=\"M4 12h16\"/></svg>Atendimento</button><button class=\"ds-item\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" width=\"18\" height=\"18\" aria-hidden=\"true\"><path d=\"M12 3 3 7.5l9 4.5 9-4.5z\"/><path d=\"m3 12.5 9 4.5 9-4.5\"/></svg>Empréstimos</button></nav>",
+      "css": ".ds-trilho { width: 248px; display: flex; flex-direction: column; gap: 24px; padding: 24px 16px; background: var(--papel, #fff); border-right: 1px solid var(--linha, #dbe2ee); font-family: var(--sans, 'Manrope', system-ui, sans-serif); } .ds-marca { display: flex; align-items: center; gap: 12px; padding: 0 8px; } .ds-marca-selo { width: 38px; height: 38px; flex: none; border-radius: 11px; background-image: var(--gradiente-forte, linear-gradient(115deg, #0f7ea7, #cb3066)); color: #fff; display: grid; place-items: center; box-shadow: var(--sombra-acao, 0 2px 4px rgba(15,126,167,.22), 0 12px 28px -8px rgba(203,48,102,.45)); } .ds-marca strong { display: block; font-size: 17px; letter-spacing: -0.02em; color: var(--tinta, #0d1526); } .ds-sub { display: block; font-size: 12px; color: var(--tinta-2, #4a5568); } .ds-item { display: flex; align-items: center; gap: 12px; padding: 11px 12px; border: 0; border-radius: var(--r, 10px); background: transparent; color: var(--tinta-2, #4a5568); font: inherit; font-size: 14px; font-weight: 600; letter-spacing: -0.01em; cursor: pointer; text-align: left; transition: background-color .14s ease, color .14s ease; } .ds-item:hover { background: var(--campo, #f4f7fb); color: var(--tinta, #0d1526); } .ds-item:focus-visible { outline: 2px solid var(--acao, #0e769d); outline-offset: 2px; } .ds-item-ativo, .ds-item-ativo:hover { background: var(--acao-fraca, #e8f9ff); color: var(--acao-tinta, #0e769d); box-shadow: inset 3px 0 0 var(--g-a-forte, #0f7ea7); }"
+    },
+    {
+      "name": "Recado",
+      "kind": "custom",
+      "refersTo": "recado-trava",
+      "description": "A caixa de resultado. A recusa ganha a mesma caixa que o sucesso, e o texto é a frase que o servidor devolveu.",
+      "html": "<div class=\"ds-recado ds-recado-trava\" role=\"alert\"><span class=\"ds-recado-ico\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" width=\"19\" height=\"19\" aria-hidden=\"true\"><path d=\"M12 4.5 2.8 20h18.4z\"/><path d=\"M12 10v4.5\"/><circle cx=\"12\" cy=\"17.4\" r=\".9\" fill=\"currentColor\" stroke=\"none\"/></svg></span><div class=\"ds-recado-corpo\">Este exemplar está separado para quem está na frente da fila.</div><button class=\"ds-recado-x\" aria-label=\"Fechar recado\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" width=\"16\" height=\"16\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6 6 18\"/></svg></button></div>",
+      "css": ".ds-recado { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; border-radius: var(--r, 10px); font-family: var(--sans, 'Manrope', system-ui, sans-serif); color: var(--tinta, #0d1526); animation: ds-surge .4s cubic-bezier(.16,1,.3,1) both; } .ds-recado-corpo { flex: 1; font-size: 14.5px; line-height: 1.5; } .ds-recado-ico { padding-top: 1px; display: inline-flex; } .ds-recado-trava { background: var(--trava-fraca, #fdeef0); } .ds-recado-trava .ds-recado-ico { color: var(--trava, #c02638); } .ds-recado-x { background: transparent; border: 0; cursor: pointer; color: var(--tinta-3, #616c84); padding: 2px; display: inline-flex; border-radius: 6px; } .ds-recado-x:hover { color: var(--tinta, #0d1526); } .ds-recado-x:focus-visible { outline: 2px solid var(--acao, #0e769d); outline-offset: 2px; } @keyframes ds-surge { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }"
+    },
+    {
+      "name": "Vazio",
+      "kind": "custom",
+      "refersTo": "carta",
+      "description": "O estado vazio: moldura de 52px com ícone do sistema e uma frase de até 34ch. Sem ilustração.",
+      "html": "<div class=\"ds-vazio\"><span class=\"ds-vazio-moldura\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" width=\"24\" height=\"24\" aria-hidden=\"true\"><path d=\"M5 5.5A1.5 1.5 0 0 1 6.5 4H9v16H6.5A1.5 1.5 0 0 1 5 18.5z\"/><path d=\"M9 4h3.5A1.5 1.5 0 0 1 14 5.5v13a1.5 1.5 0 0 1-1.5 1.5H9z\"/><path d=\"m16.2 5.6 2.4-.6a1 1 0 0 1 1.2.7l2.1 12.1\"/></svg></span><p>Todo o acervo está na estante. Nenhum empréstimo em curso.</p></div>",
+      "css": ".ds-vazio { padding: 48px 20px; text-align: center; display: grid; place-items: center; gap: 12px; font-family: var(--sans, 'Manrope', system-ui, sans-serif); } .ds-vazio-moldura { width: 52px; height: 52px; border-radius: var(--r-g, 16px); background: var(--campo-2, #e6ebf4); color: var(--tinta-3, #616c84); display: grid; place-items: center; } .ds-vazio p { margin: 0; max-width: 34ch; font-size: 13.5px; color: var(--tinta-2, #4a5568); }"
+    },
+    {
+      "name": "Carregando",
+      "kind": "custom",
+      "refersTo": "carta",
+      "description": "Esqueleto no formato da resposta que vem, para a tela não pular quando o dado chega.",
+      "html": "<div class=\"ds-carregando\" aria-busy=\"true\"><div></div><div></div><div></div></div>",
+      "css": ".ds-carregando { display: grid; gap: 8px; } .ds-carregando > div { height: 56px; border-radius: var(--r, 10px); background: linear-gradient(90deg, var(--campo-2, #e6ebf4) 25%, var(--campo, #f4f7fb) 37%, var(--campo-2, #e6ebf4) 63%); background-size: 400% 100%; animation: ds-desliza 1.3s ease infinite; } @keyframes ds-desliza { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }"
+    }
+  ],
+  "narrative": {
+    "northStar": "O balcão iluminado",
+    "overview": "A tela é um balcão de atendimento, não um painel de métricas. O funcionário tem o livro na mão, lê o código de tombo, e a tela responde com a única ação que aquele exemplar aceita agora — e, quando recusa, diz o motivo em português, na mesma caixa em que diria \"feito\". Tudo o que o sistema mostra existe para sustentar esse gesto: o campo de tombo é a peça mais alta e mais larga da tela, a ficha do exemplar nasce dele, e a lista do que está fora da estante fica abaixo, linha a linha.\n\nO mundo é feito de duas camadas. Embaixo, o campo da página inteiro: o gradiente Transfile do uiGradients diluído em 52% de branco, fixo, colorido de canto a canto. Em cima, cartas brancas de canto arredondado que flutuam sobre ele com sombra de deslocamento e desfoque. A cor forte não é polvilhada em detalhezinho — ela ocupa região: o selo da marca, o botão da ação primária, a barra do item ativo no trilho, o fundo da entrada. Legibilidade não é gosto aqui: é tela de turno de oito horas, e todo par texto/fundo do sistema foi medido em contraste antes de entrar.\n\nEsta identidade substituiu, por decisão explícita do usuário, um mundo anterior de quatro verdes chapados com tipo bitmap e ícones de 8×8 px. Ele o rejeitou nas palavras dele: velho e sem vida. Esse mundo é a anti-referência confirmada — não existe mais no código e não volta.",
+    "keyCharacteristics": [
+      "Campo colorido de página inteira, cartas brancas em camadas por cima.",
+      "Uma cor que manda, sempre em região cheia, nunca em detalhe decorativo.",
+      "Três sinais de significado único: ok, alerta, trava. Nenhum quarto.",
+      "Manrope no texto; JetBrains Mono só onde há código que se casa com uma etiqueta física.",
+      "Contraste medido, não estimado; nenhum par abaixo de 4.5:1.",
+      "Movimento de saída exponencial, curto, a partir de um estado já visível."
+    ],
+    "rules": [
+      { "name": "A Regra da Região", "body": "A cor forte ocupa região inteira ou não aparece: selo, botão, barra do ativo, fundo de entrada. Nada de fiozinho, borda decorativa ou ícone tingido \"para animar\".", "section": "colors" },
+      { "name": "A Regra dos Três Sinais", "body": "Existem exatamente três sinais — ok, alerta, trava — e cada um significa uma coisa só. Um quarto sinal não se inventa; se um estado novo aparece, ele se encaixa em um dos três ou vira neutro.", "section": "colors" },
+      { "name": "A Regra da Medição", "body": "Nenhum par texto/fundo entra sem contraste calculado e anotado ao lado do valor. Um número não medido não é uma decisão.", "section": "colors" },
+      { "name": "A Regra da Ponta Certa", "body": "Onde houver texto ou ícone branco por cima, use a versão forte do gradiente. O cru fica para superfície sem texto.", "section": "colors" },
+      { "name": "A Regra da Mono Curta", "body": "JetBrains Mono só onde há código de tombo, ISBN ou data alinhada em coluna. Prosa em mono é proibida — inclusive em rótulo, botão e recado.", "section": "typography" },
+      { "name": "A Regra do Rótulo Vazio", "body": "A caixa alta espaçada pertence ao rótulo que nomeia um campo. Rótulo nunca carrega valor, e nenhum dado sobe para caixa alta.", "section": "typography" },
+      { "name": "A Regra do Número que Não Pula", "body": "Todo número que muda no lugar usa tabular-nums e casas fixas, para a linha não se mexer quando o valor troca.", "section": "typography" },
+      { "name": "A Regra do Desfoque Obrigatório", "body": "Toda sombra tem deslocamento e desfoque. Sombra dura de deslocamento seco não pertence a este mundo.", "section": "elevation" },
+      { "name": "A Regra da Sombra Colorida", "body": "A sombra de ação só acompanha superfície de gradiente forte. Carta branca nunca recebe sombra colorida.", "section": "elevation" },
+      { "name": "A Regra do Traço Único", "body": "Ícone novo se desenha na grade de 24 com traço 1.75 e currentColor. Preenchimento só onde a forma exige (o ponto do alerta, o marcador redondo).", "section": "shapes" },
+      { "name": "A Regra do Estado Já Visível", "body": "Animação parte de algo que já está na tela e responde ao toque. Nada aparece do nada para fazer número.", "section": "components" }
+    ],
+    "dos": [
+      "Do medir e anotar o contraste ao lado de todo par texto/fundo novo, como o resto do global.css faz.",
+      "Do usar tinta-campo para qualquer texto apoiado direto no campo colorido — a tinta secundária comum não passa sobre a ponta rosa.",
+      "Do usar a versão forte do gradiente sob texto ou ícone branco, e o gradiente cru só em superfície sem texto.",
+      "Do dar à ação primária uma superfície de gradiente cheio por bloco, e às demais o botão suave.",
+      "Do escrever todo espaçamento como múltiplo de --u (4px).",
+      "Do mostrar a recusa do servidor na mesma caixa que o sucesso, com a frase que ele mandou.",
+      "Do desenhar ícone novo na grade de 24 com traço 1.75 e currentColor.",
+      "Do manter o esqueleto no formato da resposta que vem, para a tela não pular."
+    ],
+    "donts": [
+      "Don't inventar um quarto sinal. Ok, alerta e trava, e nada mais.",
+      "Don't polvilhar a cor forte em detalhe, fio ou ícone decorativo — ela ocupa região ou não aparece.",
+      "Don't usar sombra sem desfoque, nem sombra colorida em carta branca.",
+      "Don't usar JetBrains Mono em prosa, botão, rótulo ou recado; ela é só do código de tombo, ISBN e data em coluna.",
+      "Don't subir dado para caixa alta, nem pôr valor dentro de um rótulo.",
+      "Don't usar emoji, glifo Unicode ou pacote de ícones no lugar do sistema de ícones desenhado.",
+      "Don't carregar fonte de CDN: a rede institucional bloqueia, e as fontes são servidas do próprio domínio.",
+      "Don't trazer de volta o mundo anterior — verdes chapados, tipo bitmap, xadrez, ícone de 8px. É a anti-referência confirmada pelo usuário."
+    ]
+  }
+}

@@ -79,8 +79,7 @@ export function Gestao() {
       <style>{`
         .abas {
           display: inline-flex; gap: 2px; padding: 3px;
-          background: rgba(255,255,255,0.72); border-radius: 12px; width: fit-content;
-          box-shadow: var(--sombra-1);
+          background: var(--campo-2); border-radius: 12px; width: fit-content;
         }
         .aba {
           border: 0; background: transparent; cursor: pointer;
