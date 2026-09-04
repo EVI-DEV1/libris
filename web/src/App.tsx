@@ -83,7 +83,8 @@ export function App() {
           min-height: 100dvh;
           display: grid;
           grid-template-columns: 248px 1fr;
-          background: var(--campo);
+          background: var(--fundo);
+          background-attachment: fixed;
         }
         .app > * { min-width: 0; }
         .palco { min-width: 0; overflow-x: hidden; }

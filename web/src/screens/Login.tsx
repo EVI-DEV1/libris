@@ -77,10 +77,8 @@ export function Login({ onEntrar }: { onEntrar: (u: User) => void }) {
           padding: calc(var(--u) * 6);
           /* Um campo de cor que respira, para a entrada não ser um formulário
              solto no branco. */
-          background:
-            radial-gradient(900px 520px at 12% -8%, rgba(22, 191, 253, 0.28) 0%, transparent 60%),
-            radial-gradient(900px 520px at 88% 8%, rgba(203, 48, 102, 0.22) 0%, transparent 58%),
-            var(--campo);
+          background: var(--fundo);
+          background-attachment: fixed;
         }
         .entrada-caixa {
           width: min(400px, 100%);
