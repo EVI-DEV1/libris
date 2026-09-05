@@ -13,14 +13,29 @@ const bookInclude = {
 
 type BookWithRelations = Prisma.BookGetPayload<{ include: typeof bookInclude }>;
 
-/** Achata a tabela de juncao: o cliente da API quer `authors: [{id,name}]`. */
-function present(book: BookWithRelations & { copies?: { status: string }[] }) {
+/** Exemplar como a ficha da obra mostra: e o exemplar que circula, nao o titulo. */
+type CopyDaFicha = { id: string; code: string; status: string; shelf: string | null };
+
+/**
+ * Achata a tabela de juncao: o cliente da API quer `authors: [{id,name}]`.
+ *
+ * `copies` chega de duas formas. Na lista vem so o status, porque arrastar cada
+ * exemplar de cada obra da pagina custa caro e ninguem le. Na ficha vem a lista
+ * inteira, e ai ela precisa sair no corpo — `comExemplares` e quem diz qual das
+ * duas e o caso. Sem isso a contagem saia certa e a lista sumia, que foi
+ * exatamente o defeito: "4 na estante" com a gaveta dizendo que nao havia nenhum.
+ */
+function present(
+  book: BookWithRelations & { copies?: { status: string }[] },
+  { comExemplares = false }: { comExemplares?: boolean } = {},
+) {
   const { authors, _count, copies, ...rest } = book;
   return {
     ...rest,
     authors: authors.map((a) => a.author),
     totalCopies: _count.copies,
     ...(copies && { availableCopies: copies.filter((c) => c.status === 'AVAILABLE').length }),
+    ...(comExemplares && { copies: (copies ?? []) as CopyDaFicha[] }),
   };
 }
 
@@ -58,7 +73,7 @@ export const booksService = {
       prisma.book.count({ where }),
     ]);
 
-    return paginated(data.map(present), total, pagination);
+    return paginated(data.map((b) => present(b)), total, pagination);
   },
 
   async findById(id: string) {
@@ -70,7 +85,7 @@ export const booksService = {
       },
     });
     if (!book) throw AppError.notFound('Livro');
-    return present(book);
+    return present(book, { comExemplares: true });
   },
 
   async create(input: z.infer<typeof createBookSchema>) {

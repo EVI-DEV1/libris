@@ -16,6 +16,24 @@ describe('Catalogo', () => {
     expect(res.body.data[0].availableCopies).toBe(2);
   });
 
+  it('a ficha da obra traz os exemplares, a lista nao', async () => {
+    const { book, copies } = await seedBook(2);
+
+    const ficha = await request(app).get(`/api/v1/books/${book.id}`);
+    expect(ficha.status).toBe(200);
+    expect(ficha.body.copies).toHaveLength(2);
+    expect(ficha.body.copies.map((c: { code: string }) => c.code).sort()).toEqual(
+      copies.map((c) => c.code).sort(),
+    );
+    expect(ficha.body.copies[0]).toHaveProperty('shelf');
+
+    // Na lista o exemplar so alimenta a contagem: mandar todos custaria caro e
+    // ninguem le. O que a lista promete e o numero, e ele tem que bater.
+    const lista = await request(app).get('/api/v1/books');
+    expect(lista.body.data[0].copies).toBeUndefined();
+    expect(lista.body.data[0].availableCopies).toBe(2);
+  });
+
   it('busca por nome do autor', async () => {
     const author = await prisma.author.create({ data: { name: 'Clarice Lispector' } });
     await prisma.book.create({

@@ -3,6 +3,34 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+/**
+ * Corrige acentos que o acervo de demonstracao nasceu sem.
+ *
+ * Categoria e autor tem o nome como chave unica, entao o upsert com o nome
+ * certo criaria uma linha nova e deixaria a antiga pendurada com os vinculos.
+ * Renomeando antes, o upsert seguinte encontra a linha e nao duplica nada.
+ */
+async function renomear() {
+  const pares: [string, string][] = [
+    ['Ficcao Cientifica', 'Ficção Científica'],
+    ['Historia', 'História'],
+  ];
+  for (const [de, para] of pares) {
+    const antiga = await prisma.category.findUnique({ where: { name: de } });
+    const nova = await prisma.category.findUnique({ where: { name: para } });
+    if (antiga && !nova) await prisma.category.update({ where: { id: antiga.id }, data: { name: para } });
+  }
+
+  const autores: [string, string][] = [['Guimaraes Rosa', 'Guimarães Rosa']];
+  for (const [de, para] of autores) {
+    const antigo = await prisma.author.findUnique({ where: { name: de } });
+    const novo = await prisma.author.findUnique({ where: { name: para } });
+    if (antigo && !novo) await prisma.author.update({ where: { id: antigo.id }, data: { name: para } });
+  }
+
+  await prisma.user.updateMany({ where: { email: 'balcao@biblioteca.dev' }, data: { name: 'Bruno Balcão' } });
+}
+
 async function main() {
   const senha = await bcrypt.hash('admin12345', 10);
 
@@ -16,7 +44,7 @@ async function main() {
       where: { email: 'balcao@biblioteca.dev' },
       update: {},
       create: {
-        name: 'Bruno Balcao',
+        name: 'Bruno Balcão',
         email: 'balcao@biblioteca.dev',
         passwordHash: senha,
         role: 'LIBRARIAN',
@@ -29,17 +57,19 @@ async function main() {
     }),
   ]);
 
+  await renomear();
+
   const categorias = await Promise.all(
-    ['Literatura Brasileira', 'Ficcao Cientifica', 'Tecnologia', 'Historia'].map((name) =>
+    ['Literatura Brasileira', 'Ficção Científica', 'Tecnologia', 'História'].map((name) =>
       prisma.category.upsert({ where: { name }, update: {}, create: { name } }),
     ),
   );
 
   const autores = await Promise.all(
     [
-      { name: 'Guimaraes Rosa', bio: 'Autor mineiro, mestre da linguagem inventada.' },
+      { name: 'Guimarães Rosa', bio: 'Autor mineiro, mestre da linguagem inventada.' },
       { name: 'Machado de Assis', bio: 'Fundador da Academia Brasileira de Letras.' },
-      { name: 'Ursula K. Le Guin', bio: 'Escritora norte-americana de ficcao cientifica.' },
+      { name: 'Ursula K. Le Guin', bio: 'Escritora norte-americana de ficção científica.' },
       { name: 'Robert C. Martin', bio: 'Engenheiro de software, autor de Clean Code.' },
     ].map((data) => prisma.author.upsert({ where: { name: data.name }, update: {}, create: data })),
   );
@@ -47,7 +77,7 @@ async function main() {
   const acervo = [
     {
       isbn: '9788535902778',
-      title: 'Grande Sertao: Veredas',
+      title: 'Grande Sertão: Veredas',
       publisher: 'Companhia das Letras',
       publishedYear: 1956,
       categoryIdx: 0,
@@ -56,7 +86,7 @@ async function main() {
     },
     {
       isbn: '9788572322836',
-      title: 'Memorias Postumas de Bras Cubas',
+      title: 'Memórias Póstumas de Brás Cubas',
       publisher: 'Nova Aguilar',
       publishedYear: 1881,
       categoryIdx: 0,
@@ -65,7 +95,7 @@ async function main() {
     },
     {
       isbn: '9780441478125',
-      title: 'A Mao Esquerda da Escuridao',
+      title: 'A Mão Esquerda da Escuridão',
       publisher: 'Aleph',
       publishedYear: 1969,
       categoryIdx: 1,
@@ -86,7 +116,7 @@ async function main() {
   for (const item of acervo) {
     const book = await prisma.book.upsert({
       where: { isbn: item.isbn },
-      update: {},
+      update: { title: item.title, publisher: item.publisher, publishedYear: item.publishedYear },
       create: {
         isbn: item.isbn,
         title: item.title,
