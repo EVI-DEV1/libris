@@ -90,7 +90,11 @@ export function Equipe({ eu }: { eu: User }) {
         titulo="Com acesso ao sistema"
         icone="usuario"
         padding={false}
-        direita={pessoas ? <Selo>{pessoas.length}</Selo> : null}
+        /* Conta so quem entra. A conta inativa continua na lista, porque o
+           historico dela existe e a direcao precisa achar a pessoa — mas
+           somar quem nao tem acesso num selo que diz "com acesso" seria a
+           tela se contradizendo em duas linhas. */
+        direita={pessoas ? <Selo>{pessoas.filter((p) => p.active).length}</Selo> : null}
       >
         {pessoas === null ? (
           <div style={{ padding: 'calc(var(--u) * 5)' }}>
