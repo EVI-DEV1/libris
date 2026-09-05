@@ -79,6 +79,15 @@ export function App() {
     return () => window.removeEventListener('unhandledrejection', onErro);
   }, [sair]);
 
+  // A conta voltou para a senha da casa no meio da sessao (a direcao resetou).
+  // O servidor ja recusou tudo; aqui a tela para de insistir e pede a troca.
+  useEffect(() => {
+    const aoExigirTroca = () =>
+      setUser((u) => (u && !u.mustChangePassword ? { ...u, mustChangePassword: true } : u));
+    window.addEventListener('sessao:senha-padrao', aoExigirTroca);
+    return () => window.removeEventListener('sessao:senha-padrao', aoExigirTroca);
+  }, []);
+
   if (carregando) {
     return (
       <main style={{ display: 'grid', placeItems: 'center', minHeight: '100dvh' }}>

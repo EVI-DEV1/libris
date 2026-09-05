@@ -3,7 +3,7 @@ import rateLimit from 'express-rate-limit';
 import { authController } from './auth.controller';
 import { changePasswordSchema, loginSchema, registerSchema } from './auth.schema';
 import { validate } from '../../middlewares/validate';
-import { authenticate } from '../../middlewares/auth';
+import { autenticarToken } from '../../middlewares/auth';
 import { asyncHandler } from '../../shared/asyncHandler';
 import { env } from '../../config/env';
 
@@ -31,11 +31,13 @@ authRoutes.post(
   validate({ body: loginSchema }),
   asyncHandler(authController.login),
 );
-authRoutes.get("/me", authenticate, asyncHandler(authController.me));
+// So o token, sem a trava de senha padrao: quem esta na senha da casa
+// precisa justamente destas duas rotas para sair dela.
+authRoutes.get("/me", autenticarToken, asyncHandler(authController.me));
 
 authRoutes.post(
   "/change-password",
-  authenticate,
+  autenticarToken,
   validate({ body: changePasswordSchema }),
   asyncHandler(authController.changePassword),
 );

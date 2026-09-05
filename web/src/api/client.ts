@@ -68,6 +68,17 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
 
   if (!res.ok) {
     const err = (body as ApiErrorBody | null)?.error;
+
+    /*
+     * A direcao pode resetar a senha de alguem que esta com a tela aberta. O
+     * servidor recusa na hora, e cada tela pegaria esse 403 como se fosse um
+     * erro dela. Avisando daqui, o aviso chega mesmo quando quem chamou trata
+     * o proprio erro — e a pessoa cai na troca de senha em vez de ficar
+     * lendo uma recusa que ela nao sabe resolver.
+     */
+    if (err?.code === 'SENHA_PADRAO') {
+      window.dispatchEvent(new CustomEvent('sessao:senha-padrao'));
+    }
     throw new ApiError(
       err?.message ?? 'Erro inesperado do servidor.',
       err?.code ?? 'UNKNOWN',

@@ -50,5 +50,15 @@ try {
     shell: true,
   });
 } finally {
-  rmSync(destino, { recursive: true, force: true });
+  /*
+   * Best-effort: no Windows a limpeza falha com EPERM enquanto o Vercel CLI
+   * ainda segura algum arquivo da exportacao. Deixar isso derrubar o processo
+   * fazia um deploy que ficou Ready sair com codigo de erro — mentira cara,
+   * porque a leitura obvia e "nao subiu". Sobra uma pasta no temp do sistema.
+   */
+  try {
+    rmSync(destino, { recursive: true, force: true });
+  } catch (e) {
+    console.warn(`Deploy concluido. Nao consegui apagar ${destino} (${e.code}); o sistema limpa depois.`);
+  }
 }
